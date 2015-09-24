@@ -1,7 +1,6 @@
 # fooflix
 Foobar recommendation engine
 
-
 +-----+--------+--------+--------+--------+
 | uri |  GET   |  PUT   |  POST  | DELETE |
 +-----+--------+--------+--------+--------+
