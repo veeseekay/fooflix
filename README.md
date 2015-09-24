@@ -1,12 +1,6 @@
 # fooflix
 Foobar recommendation engine
 
-+-----+--------+--------+--------+--------+
-
-| uri |  GET   |  PUT   |  POST  | DELETE |
-
-+-----+--------+--------+--------+--------+
-
-|     | Value1 | Value2 | Value3 | Value4 |
-
-+-----+--------+--------+--------+--------+
+uri | GET | PUT | POST | DELETE
+--- | --- | --- | --- | ---
+1 | 2 | 3 | 4 | 5
