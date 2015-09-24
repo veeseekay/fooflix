@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.6.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
+jar {
+    baseName = 'fooflix'
+    version =  '1.0'
+}
+
+repositories {
+    mavenCentral()
+    maven { url "http://m2.neo4j.org" }
+    maven { url "http://repo.spring.io/libs-release" }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter")
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework:spring-context")
+    compile("org.springframework:spring-tx")
+    compile("org.springframework.data:spring-data-neo4j")
+    compile("org.hibernate:hibernate-validator")
+    compile("javax.el:javax.el-api:2.2.4")
+    compile("javax.el:javax.el-api:2.2.4")
+    compile("org.neo4j.app:neo4j-server:2.1.5")
+    compile("com.ryantenney.metrics:metrics-spring:3.0.3")
+
+
+    testCompile("junit:junit")
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}

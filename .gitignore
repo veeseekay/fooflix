@@ -1,0 +1,4 @@
+accessingdataneo4j.db/
+build/
+.gradle/
+.idea/
