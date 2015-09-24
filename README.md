@@ -1,2 +1,2 @@
 # fooflix
-a foobar recommendation engine
+Foobar recommendation engine
