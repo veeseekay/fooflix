@@ -1,14 +1,13 @@
-package com.fooflix.controllers;
+package com.bar.fooflix.controllers;
 
 import javax.validation.Valid;
 
-import com.fooflix.repositories.hello.PersonRepository;
+import com.bar.fooflix.repositories.hello.PersonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.neo4j.core.GraphDatabase;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,9 +30,6 @@ public class MoviesController {
 
     @Autowired
     PersonRepository personRepository;
-
-    @Autowired
-    GraphDatabase graphDatabase;
 
     private static final Logger LOG = LoggerFactory.getLogger(MoviesController.class);
 

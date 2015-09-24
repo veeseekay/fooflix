@@ -1,4 +1,4 @@
-package com.fooflix.configurations;
+package com.bar.fooflix.configurations;
 
 import com.ryantenney.metrics.spring.config.annotation.EnableMetrics;
 import com.ryantenney.metrics.spring.config.annotation.MetricsConfigurerAdapter;
@@ -24,11 +24,11 @@ public class FooflixConfiguration extends MetricsConfigurerAdapter {
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(FooflixConfiguration.class);
 
     @Configuration
-    @EnableNeo4jRepositories(basePackages = "com.fooflix")
+    @EnableNeo4jRepositories(basePackages = "com.bar.fooflix")
     static class ApplicationConfig extends Neo4jConfiguration {
 
         public ApplicationConfig() {
-            setBasePackage("com.fooflix");
+            setBasePackage("com.bar.fooflix");
         }
 
         @Bean

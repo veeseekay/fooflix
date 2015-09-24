@@ -1,9 +1,9 @@
-package com.fooflix.controllers;
+package com.bar.fooflix.controllers;
 
-import com.fooflix.entities.hello.Person;
-import com.fooflix.repositories.hello.PersonRepository;
+import com.bar.fooflix.entities.hello.Person;
+import com.bar.fooflix.repositories.hello.PersonRepository;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.kernel.impl.util.FileUtils;
+import org.neo4j.io.fs.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

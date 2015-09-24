@@ -32,13 +32,12 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
     compile("org.springframework:spring-context")
     compile("org.springframework:spring-tx")
-    compile("org.springframework.data:spring-data-neo4j")
+    compile("org.springframework.data:spring-data-neo4j:3.4.0.RELEASE")
     compile("org.hibernate:hibernate-validator")
     compile("javax.el:javax.el-api:2.2.4")
     compile("javax.el:javax.el-api:2.2.4")
-    compile("org.neo4j.app:neo4j-server:2.1.5")
+    compile("org.neo4j.app:neo4j-server:2.2.5")
     compile("com.ryantenney.metrics:metrics-spring:3.0.3")
-
 
     testCompile("junit:junit")
 }

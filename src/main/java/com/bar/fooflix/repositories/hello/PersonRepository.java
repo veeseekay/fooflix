@@ -1,12 +1,14 @@
-package com.fooflix.repositories.hello;
+package com.bar.fooflix.repositories.hello;
 
-import com.fooflix.entities.hello.Person;
+import com.bar.fooflix.entities.hello.Person;
 import org.springframework.data.repository.CrudRepository;
+
+import java.util.Collection;
 
 public interface PersonRepository extends CrudRepository<Person, String> {
 
     Person findByName(String name);
 
-    Iterable<Person> findByTeammatesName(String name);
+    Collection<Person> findByTeammatesName(String name);
 
 }

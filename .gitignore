@@ -1,4 +1,6 @@
 accessingdataneo4j.db/
+*.iml
 build/
 .gradle/
 .idea/
+*.log

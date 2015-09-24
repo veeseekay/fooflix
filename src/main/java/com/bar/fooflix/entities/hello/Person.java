@@ -1,4 +1,4 @@
-package com.fooflix.entities.hello;
+package com.bar.fooflix.entities.hello;
 
 import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.Fetch;
@@ -53,5 +53,4 @@ public class Person {
         }
         return results;
     }
-
 }
