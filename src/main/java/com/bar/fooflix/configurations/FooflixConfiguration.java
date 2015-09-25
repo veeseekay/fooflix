@@ -1,7 +1,6 @@
 package com.bar.fooflix.configurations;
 
 import com.ryantenney.metrics.spring.config.annotation.EnableMetrics;
-import com.ryantenney.metrics.spring.config.annotation.MetricsConfigurerAdapter;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.io.fs.FileUtils;
@@ -16,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.neo4j.config.EnableNeo4jRepositories;
 import org.springframework.data.neo4j.config.Neo4jConfiguration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.PreDestroy;
 import java.io.File;
@@ -23,12 +23,17 @@ import java.io.File;
 @EnableMetrics
 @Configuration
 @EnableAutoConfiguration(exclude = {JacksonAutoConfiguration.class})
-public class FooflixConfiguration extends MetricsConfigurerAdapter {
+public class FooflixConfiguration {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(FooflixConfiguration.class);
 
     @Configuration
+    @EnableTransactionManagement
     @EnableNeo4jRepositories(basePackages = "com.bar.fooflix")
+    /*@ComponentScan({
+            "com.bar.fooflix.entities",
+            "com.bar.fooflix.services",
+    })*/
     static class ApplicationConfig extends Neo4jConfiguration {
 
         public ApplicationConfig() {
