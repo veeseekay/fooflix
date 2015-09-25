@@ -4,6 +4,7 @@ import com.ryantenney.metrics.spring.config.annotation.EnableMetrics;
 import com.ryantenney.metrics.spring.config.annotation.MetricsConfigurerAdapter;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.io.fs.FileUtils;
 import org.neo4j.kernel.GraphDatabaseAPI;
 import org.neo4j.server.WrappingNeoServerBootstrapper;
 import org.neo4j.server.configuration.Configurator;
@@ -15,6 +16,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.neo4j.config.EnableNeo4jRepositories;
 import org.springframework.data.neo4j.config.Neo4jConfiguration;
+
+import javax.annotation.PreDestroy;
+import java.io.File;
 
 @EnableMetrics
 @Configuration
@@ -48,5 +52,11 @@ public class FooflixConfiguration extends MetricsConfigurerAdapter {
 
             return db;
         }
+    }
+
+    @PreDestroy
+    public void cleanUp() throws Exception {
+        LOG.info("Spring Container is destroyed! clean me up ?");
+        FileUtils.deleteRecursively(new File("accessingdataneo4j.db"));
     }
 }

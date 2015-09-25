@@ -10,45 +10,45 @@ import java.util.HashSet;
 import java.util.Set;
 
 @NodeEntity
-public class Person {
+public class Human {
 
     @GraphId Long id;
     public String name;
 
-    public Person() {}
-    public Person(String name) { this.name = name; }
+    public Human() {}
+    public Human(String name) { this.name = name; }
 
     @RelatedTo(type="TEAMMATE", direction=Direction.BOTH)
-    public @Fetch Set<Person> teammates;
+    public @Fetch Set<Human> teammates;
 
     @RelatedTo(type="FRIEND", direction=Direction.BOTH)
-    public @Fetch Set<Person> friends;
+    public @Fetch Set<Human> friends;
 
-    public void worksWith(Person person) {
+    public void worksWith(Human human) {
         if (teammates == null) {
-            teammates = new HashSet<Person>();
+            teammates = new HashSet<>();
         }
-        teammates.add(person);
+        teammates.add(human);
     }
 
-    public void friendsWith(Person person) {
+    public void friendsWith(Human human) {
         if (friends == null) {
-            friends = new HashSet<Person>();
+            friends = new HashSet<>();
         }
-        friends.add(person);
+        friends.add(human);
     }
 
     public String toString() {
         String results = name + "'s teammates include\n";
         if (teammates != null) {
-            for (Person person : teammates) {
-                results += "\t- " + person.name + "\n";
+            for (Human human : teammates) {
+                results += "\t- " + human.name + "\n";
             }
         }
         results += name + "'s friends include\n";
         if (friends != null) {
-            for (Person person : friends) {
-                results += "\t- " + person.name + "\n";
+            for (Human human : friends) {
+                results += "\t- " + human.name + "\n";
             }
         }
         return results;

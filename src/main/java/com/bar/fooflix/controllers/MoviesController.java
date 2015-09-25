@@ -2,7 +2,7 @@ package com.bar.fooflix.controllers;
 
 import javax.validation.Valid;
 
-import com.bar.fooflix.repositories.hello.PersonRepository;
+import com.bar.fooflix.repositories.hello.HumanRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class MoviesController {
 
     @Autowired
-    PersonRepository personRepository;
+    HumanRepository personRepository;
 
     private static final Logger LOG = LoggerFactory.getLogger(MoviesController.class);
 
