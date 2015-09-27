@@ -1,6 +1,11 @@
 package com.bar.fooflix.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
@@ -8,19 +13,33 @@ import org.springframework.data.neo4j.support.index.IndexType;
 
 import java.util.Date;
 
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @NodeEntity
+@JsonPropertyOrder({
+})
 public class Person {
     @GraphId
     Long nodeId;
     @Indexed(unique = true)
     String id;
+
+    @JsonProperty("name")
     @Indexed(indexType = IndexType.FULLTEXT, indexName = "people")
     String name;
+
+    @JsonIgnore
     private Date birthday;
+
+    @JsonIgnore
     private String birthplace;
+
+    @JsonIgnore
     private String biography;
+
+    @JsonIgnore
     private Integer version;
+
+    @JsonIgnore
     private Date lastModified;
 
     protected Person(String id, String name) {
@@ -42,12 +61,7 @@ public class Person {
     public void setName(String name) {
         this.name = name;
     }
-
-    @Override
-    public String toString() {
-        return String.format("%s [%s]", name, id);
-    }
-
+    
     public Date getBirthday() {
         return birthday;
     }
@@ -102,5 +116,10 @@ public class Person {
     @Override
     public int hashCode() {
         return nodeId != null ? nodeId.hashCode() : super.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

@@ -1,10 +1,18 @@
 package com.bar.fooflix.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedToVia;
 
+import javax.annotation.Generated;
 import java.util.Collection;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Generated("org.jsonschema2pojo")
+@JsonPropertyOrder({
+})
 @NodeEntity
 public class Actor extends Person {
     public Actor(String id, String name) {
@@ -14,6 +22,7 @@ public class Actor extends Person {
     public Actor() {
     }
 
+    @JsonManagedReference
     @RelatedToVia
     Collection<Role> roles;
 

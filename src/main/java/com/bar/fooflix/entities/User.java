@@ -1,6 +1,8 @@
 package com.bar.fooflix.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.helpers.collection.IteratorUtil;
 import org.springframework.data.neo4j.annotation.Fetch;
@@ -11,9 +13,14 @@ import org.springframework.data.neo4j.annotation.RelatedTo;
 import org.springframework.data.neo4j.annotation.RelatedToVia;
 import org.springframework.data.neo4j.template.Neo4jOperations;
 
+import javax.annotation.Generated;
 import java.util.Collection;
 import java.util.Set;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Generated("org.jsonschema2pojo")
+@JsonPropertyOrder({
+})
 @NodeEntity
 public class User {
     @GraphId
@@ -25,15 +32,13 @@ public class User {
     String login;
     String name;
     String info;
-    private Roles[] roles;
 
     public User() {
     }
 
-    public User(String login, String name, String password, Roles... roles) {
+    public User(String login, String name, String password) {
         this.login = login;
         this.name = name;
-        this.roles = roles;
     }
 
     @RelatedToVia(type = RATED)
@@ -73,9 +78,6 @@ public class User {
         return friends;
     }
 
-    public Roles[] getRole() {
-        return roles;
-    }
 
 
     public String getLogin() {

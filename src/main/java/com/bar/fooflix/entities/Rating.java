@@ -1,11 +1,15 @@
 package com.bar.fooflix.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.data.neo4j.annotation.*;
 
-/**
- * @author mh
- * @since 04.03.11
- */
+import javax.annotation.Generated;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Generated("org.jsonschema2pojo")
+@JsonPropertyOrder({
+})
 @RelationshipEntity
 public class Rating {
     private static final int MAX_STARS = 5;

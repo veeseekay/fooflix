@@ -1,5 +1,11 @@
 package com.bar.fooflix.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.neo4j.helpers.collection.IteratorUtil;
 import org.springframework.data.neo4j.annotation.*;
 import org.springframework.data.neo4j.support.index.IndexType;
@@ -8,29 +14,47 @@ import java.util.*;
 
 import static org.neo4j.graphdb.Direction.INCOMING;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @NodeEntity
+@JsonPropertyOrder({
+        "id", "title", "description", "directors"
+})
 public class Movie {
     @GraphId Long nodeId;
 
+    @JsonProperty("id")
     @Indexed(unique = true)
     String id;
 
+    @JsonProperty("title")
     @Indexed(indexType=IndexType.FULLTEXT, indexName = "search")
     String title;
 
+    @JsonIgnore
+    @JsonProperty("description")
     String description;
 
+    @JsonBackReference
+    @JsonIgnore
+    @JsonProperty("directors")
     @RelatedTo(type="DIRECTED", direction = INCOMING)
     Set<Person> directors;
 
+    @JsonBackReference
+    @JsonIgnore
+    @JsonProperty("actors")
     @RelatedTo(type = "ACTS_IN", direction = INCOMING)
     Set<Person> actors;
 
+    @JsonIgnore
     @RelatedToVia(type = "ACTS_IN", direction = INCOMING)
     Collection<Role> roles;
 
     @RelatedToVia(type = "RATED", direction = INCOMING)
-    @Fetch Iterable<Rating> ratings;
+    @JsonIgnore
+    @Fetch
+    Iterable<Rating> ratings;
+
     private String language;
     private String imdbId;
     private String tagline;
@@ -73,11 +97,6 @@ public class Movie {
 
     public String getTitle() {
         return title;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s (%s) [%s]", title, releaseDate, id);
     }
 
     public String getDescription() {
@@ -231,5 +250,10 @@ public class Movie {
 
     public Set<Person> getDirectors() {
         return directors;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

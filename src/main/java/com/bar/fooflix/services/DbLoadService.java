@@ -6,28 +6,35 @@ import com.bar.fooflix.entities.Director;
 import com.bar.fooflix.entities.Movie;
 import com.bar.fooflix.entities.Person;
 import com.bar.fooflix.entities.Roles;
+import com.bar.fooflix.entities.User;
 import com.bar.fooflix.repositories.ActorRepository;
 import com.bar.fooflix.repositories.DirectorRepository;
 import com.bar.fooflix.repositories.MovieRepository;
+import com.bar.fooflix.repositories.UserRepository;
 import com.bar.fooflix.utils.TmdbJsonMapper;
 import org.neo4j.helpers.collection.CombiningIterable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.neo4j.template.Neo4jOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.neo4j.helpers.collection.IteratorUtil.asIterable;
 
 @Service
-public class TmdbImportService {
+public class DbLoadService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TmdbImportService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DbLoadService.class);
+
+    @Value("${max.actors:5}")
+    int maxActors;
 
     @Autowired
     private MovieRepository movieRepository;
@@ -39,23 +46,41 @@ public class TmdbImportService {
     private DirectorRepository directorRepository;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     private TmdbApiClient client;
 
     @Autowired
     private Neo4jOperations template;
 
     @Transactional
-    public Map<Integer, String> importMovies(Map<Integer, Integer> ranges) {
+    public Map<Integer, String> importMovies(List<Integer> ranges) {
         final Map<Integer, String> movies = new LinkedHashMap<Integer, String>();
-        for (Map.Entry<Integer, Integer> entry : ranges.entrySet()) {
-            for (int id = entry.getKey(); id <= entry.getValue(); id++) {
-                String result = importMovieFailsafe(id);
-                movies.put(id, result);
-            }
+
+        for(Integer id : ranges) {
+        String result = importMovieFailsafe(id);
+            movies.put(id, result);
         }
+
+        // Now add some users
+        addUsers();
         return movies;
     }
 
+    private void addUsers() {
+        // Now add some users
+        User micha = userRepository.save(new User("micha", "Micha", "password"));
+        User ollie = new User("ollie", "Olliver", "password");
+        micha.addFriend(ollie);
+        userRepository.save(micha);
+
+        Movie movie = movieRepository.findById("603");
+        micha.rate(template, movie, 5, "Best of the series");
+
+        movie = movieRepository.findById("605");
+        ollie.rate(template, movie, 2, "ok");
+    }
 
     private String importMovieFailsafe(Integer id) {
         try {
@@ -92,6 +117,7 @@ public class TmdbImportService {
 
     private void relatePersonsToMovie(Movie movie, Map data) {
 
+        int max = 0;
         @SuppressWarnings("unchecked") Iterable<Map> cast = (Collection<Map>) ((Map) data.get("credits")).get("cast");
         @SuppressWarnings("unchecked") Iterable<Map> crew = (Collection<Map>) ((Map) data.get("credits")).get("crew");
         for (Map entry : new CombiningIterable<>(asIterable(cast, crew))) {
@@ -106,15 +132,18 @@ public class TmdbImportService {
             switch (job) {
                 case DIRECTED:
                     final Director director = template.projectTo(doImportPerson(id, new Director(id)), Director.class);
-                    LOG.info("{} {}", job, director);
                     director.directed(movie);
+                    LOG.info("{} {}", job, director);
                     directorRepository.save(director);
                     break;
                 case ACTS_IN:
-                    final Actor actor = template.projectTo(doImportPerson(id, new Actor(id)), Actor.class);
-                    LOG.info("{} {}", job, actor);
-                    actor.playedIn(movie, (String) entry.get("character"));
-                    actorRepository.save(actor);
+                    if(max < maxActors) {
+                        final Actor actor = template.projectTo(doImportPerson(id, new Actor(id)), Actor.class);
+                        actor.playedIn(movie, (String) entry.get("character"));
+                        LOG.info("{} {}", job, actor);
+                        actorRepository.save(actor);
+                        max ++;
+                    }
                     break;
             }
         }
@@ -136,5 +165,11 @@ public class TmdbImportService {
 
         Map data = client.getPerson(personId);
         return data;
+    }
+
+    @Transactional
+    public void cleanDb() {
+        // TODO
+        //new Neo4jDatabaseCleaner(template).cleanDb();
     }
 }

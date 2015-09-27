@@ -1,17 +1,30 @@
 package com.bar.fooflix.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.data.neo4j.annotation.EndNode;
 import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.RelationshipEntity;
 import org.springframework.data.neo4j.annotation.StartNode;
 
+import javax.annotation.Generated;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Generated("org.jsonschema2pojo")
+@JsonPropertyOrder({
+})
 @RelationshipEntity(type = "ACTS_IN")
 public class Role {
     @GraphId
     Long id;
+
+    @JsonBackReference
     @EndNode
     Movie movie;
+
+    @JsonBackReference
     @Fetch
     @StartNode
     Actor actor;

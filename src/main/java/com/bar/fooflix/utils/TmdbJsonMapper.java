@@ -24,7 +24,7 @@ public class TmdbJsonMapper {
             movie.setLanguage((String) data.get("original_language"));
             movie.setImdbId((String) data.get("imdb_id"));
             movie.setTagline((String) data.get("tagline"));
-            movie.setDescription(limit((String) data.get("overview"), 500));
+            //movie.setDescription(limit((String) data.get("overview"), 50));
             movie.setReleaseDate(toDate(data, "release_date", "yyyy-MM-dd"));
             movie.setRuntime((Integer) data.get("runtime"));
             movie.setHomepage((String) data.get("homepage"));
@@ -78,7 +78,7 @@ public class TmdbJsonMapper {
             person.setBirthday(toDate(data, "birthday", "yyyy-MM-dd"));
             person.setBirthplace((String) data.get("place_of_birth"));
             String biography = (String) data.get("biography");
-            person.setBiography(limit(biography, 500));
+            //person.setBiography(limit(biography, 5));
         } catch (Exception e) {
             LOG.error("could not map person", e);
         }

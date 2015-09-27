@@ -1,4 +1,5 @@
 accessingdataneo4j.db/
+.DS_Store
 *.iml
 build/
 .gradle/

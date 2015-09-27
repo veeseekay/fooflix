@@ -47,6 +47,7 @@ public class FooflixConfiguration extends Neo4jConfiguration implements CommandL
 
     @Override
     public void run(String... strings) throws Exception {
+
         // used for Neo4j browser
         try {
             WrappingNeoServerBootstrapper neoServerBootstrapper;

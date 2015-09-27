@@ -39,7 +39,8 @@ public class FooflixExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public ResponseEntity<?> handleThrowable(Throwable t) {
-        LOG.error(t.getMessage(), t);
+        //LOG.error(t.getMessage(), t);
+        LOG.error(t.getMessage());
         ErrorMessage message = new ErrorMessage();
         message.setMessage(t.getMessage());
         return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);

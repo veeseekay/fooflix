@@ -12,3 +12,8 @@ uri | GET | POST | PUT | DELETE
 /movies/{id}/ratings | paginated ratings by user, aggregate=y for aggregated ratings | add new rating by a user | update if exists, else 404 not found | delete if exists, else 404 not found
 /movies/{id}/reviews | paginated reviews by user | add new review by a user | update if exists, else 404 not found | delete if exists, else 404 not found
 
+#Known Issues
+* Exception seen when accessing neo4j browser
+java.lang.IllegalStateException: The Neo Server running is of unknown type. Valid types are Community, Advanced, and Enterprise.
+This does not affect the code and can be ignored
+* neo4j browser does not show up when run as an uber jar
