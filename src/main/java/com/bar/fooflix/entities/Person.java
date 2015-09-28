@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
@@ -27,10 +26,8 @@ public class Person {
     @Indexed(indexType = IndexType.FULLTEXT, indexName = "people")
     String name;
 
-    @JsonIgnore
     private Date birthday;
 
-    @JsonIgnore
     private String birthplace;
 
     @JsonIgnore
@@ -120,6 +117,6 @@ public class Person {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return String.format("%s [%s]", name, id);
     }
 }

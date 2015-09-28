@@ -50,8 +50,8 @@ public class Movie {
     @RelatedToVia(type = "ACTS_IN", direction = INCOMING)
     Collection<Role> roles;
 
-    @RelatedToVia(type = "RATED", direction = INCOMING)
     @JsonIgnore
+    @RelatedToVia(type = "RATED", direction = INCOMING)
     @Fetch
     Iterable<Rating> ratings;
 
@@ -76,10 +76,12 @@ public class Movie {
         this.title = title;
     }
 
+    @JsonIgnore
     public Collection<Person> getActors() {
         return actors;
     }
 
+    @JsonIgnore
     public Collection<Role> getRoles() {
         return roles;
     }
@@ -115,6 +117,7 @@ public class Movie {
         return count==0 ? 0 : stars / count;
     }
 
+    @JsonIgnore
     public Collection<Rating> getRatings() {
         Iterable<Rating> allRatings = ratings;
         return allRatings == null ? Collections.<Rating>emptyList() : IteratorUtil.asCollection(allRatings);
@@ -248,6 +251,7 @@ public class Movie {
         return nodeId != null ? nodeId.hashCode() : super.hashCode();
     }
 
+    @JsonIgnore
     public Set<Person> getDirectors() {
         return directors;
     }

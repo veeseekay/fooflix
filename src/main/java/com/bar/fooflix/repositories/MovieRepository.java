@@ -1,5 +1,6 @@
 package com.bar.fooflix.repositories;
 
+import com.bar.fooflix.domain.MovieData;
 import com.bar.fooflix.entities.Movie;
 import com.bar.fooflix.entities.MovieRecommendation;
 import com.bar.fooflix.entities.User;
@@ -16,6 +17,13 @@ public interface MovieRepository extends GraphRepository<Movie>,
         NamedIndexRepository<Movie>,
         RelationshipOperationsRepository<Movie> {
     Movie findById(String id);
+
+    @Query("match (movie:Movie {id: {0}}) " +
+            "optional match (director)-[:DIRECTED]->(movie) with movie, " +
+            "COLLECT(director) AS directors " +
+            "optional match (actor)-[:ACTS_IN]->(movie)" +
+            " RETURN movie, COLLECT(actor) AS actors, directors")
+    MovieData getAMovie(String id);
 
     Page<Movie> findByTitleLike(String title, Pageable page);
 

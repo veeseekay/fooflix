@@ -1,7 +1,6 @@
 package com.bar.fooflix.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
@@ -24,7 +23,6 @@ public class Director extends Person {
     public Director() {
     }
 
-    @JsonManagedReference
     @RelatedTo(elementClass = Movie.class, type = "DIRECTED")
     private Set<Movie> directedMovies=new HashSet<>();
 
