@@ -17,6 +17,10 @@ jar {
     version =  '1.0'
 }
 
+springBoot {
+    requiresUnpack = ['org.neo4j.app:neo4j-browser']
+}
+
 repositories {
     mavenCentral()
     maven { url "http://m2.neo4j.org" }

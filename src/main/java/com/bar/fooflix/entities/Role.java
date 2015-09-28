@@ -24,7 +24,7 @@ public class Role {
     @EndNode
     Movie movie;
 
-    @JsonBackReference
+    //@JsonBackReference
     @Fetch
     @StartNode
     Actor actor;

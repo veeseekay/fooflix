@@ -33,6 +33,7 @@ public class MoviesService {
 
         Movie movie = movieRepository.findById(id);
         LOG.debug("Movie by id {} is {} with cast {} and directors {}", id, movie, movie.getActors(), movie.getDirectors());
+        LOG.debug("Movie by id {} has roles {}", id, movie.getRoles());
 
         return movie;
     }
