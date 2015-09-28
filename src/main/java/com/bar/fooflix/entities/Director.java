@@ -1,5 +1,6 @@
 package com.bar.fooflix.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.data.neo4j.annotation.NodeEntity;
@@ -23,6 +24,7 @@ public class Director extends Person {
     public Director() {
     }
 
+    @JsonBackReference
     @RelatedTo(elementClass = Movie.class, type = "DIRECTED")
     private Set<Movie> directedMovies=new HashSet<>();
 

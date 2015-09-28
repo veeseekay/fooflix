@@ -42,14 +42,12 @@ public class Movie {
     @JsonProperty("description")
     String description;
 
-    @JsonIgnore
     @JsonManagedReference
     @JsonProperty("directors")
     @RelatedTo(type="DIRECTED", direction = INCOMING)
     @Fetch
     Set<Person> directors;
 
-    @JsonIgnore
     @JsonManagedReference
     @JsonProperty("actors")
     @RelatedTo(type = "ACTS_IN", direction = INCOMING)
@@ -256,7 +254,7 @@ public class Movie {
         return nodeId != null ? nodeId.hashCode() : super.hashCode();
     }
 
-    @JsonIgnore
+    @JsonManagedReference
     public Set<Person> getDirectors() {
         return directors;
     }

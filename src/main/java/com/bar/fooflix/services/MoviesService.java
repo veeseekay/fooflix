@@ -27,13 +27,13 @@ public class MoviesService {
     private ActorRepository actorRepository;
 
     @Transactional
-    public MovieData getMovie(String id) throws Exception {
+    public Movie getMovie(String id) throws Exception {
         MovieData md = movieRepository.getAMovie(id);
         LOG.debug("Movie data after getting a movie is {}", md);
 
         Movie movie = movieRepository.findById(id);
         LOG.debug("Movie by id {} is {} with cast {} and directors {}", id, movie, movie.getActors(), movie.getDirectors());
 
-        return md;
+        return movie;
     }
 }

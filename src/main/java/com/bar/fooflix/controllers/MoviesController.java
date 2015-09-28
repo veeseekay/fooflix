@@ -1,6 +1,6 @@
 package com.bar.fooflix.controllers;
 
-import com.bar.fooflix.domain.MovieData;
+import com.bar.fooflix.entities.Movie;
 import com.bar.fooflix.services.MoviesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +59,8 @@ public class MoviesController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMovie(@RequestHeader HttpHeaders headers, @PathVariable String id) throws Exception {
-        MovieData m = moviesService.getMovie(id);
-        LOG.debug("Got movie {} with {} and directed by {}", m.getMovie().getTitle(), m.getCast(), m.getDirectors());
+        Movie m = moviesService.getMovie(id);
+        //LOG.debug("Got movie {} with {} and directed by {}", m.getMovie().getTitle(), m.getCast(), m.getDirectors());
         return new ResponseEntity<>(m, HttpStatus.OK);
     }
 
@@ -80,7 +80,7 @@ public class MoviesController {
 
     @RequestMapping(value = "/{id}/crew", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMovieCrew(@RequestHeader HttpHeaders headers, @PathVariable String id) throws Exception {
-        MovieData m = moviesService.getMovie(id);
+        Movie m = moviesService.getMovie(id);
         return new ResponseEntity<>(m, HttpStatus.OK);
     }
 
@@ -100,7 +100,7 @@ public class MoviesController {
 
     @RequestMapping(value = "/{id}/cast", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMovieCast(@RequestHeader HttpHeaders headers, @PathVariable String id) throws Exception {
-        MovieData m = moviesService.getMovie(id);
+        Movie m = moviesService.getMovie(id);
         return new ResponseEntity<>(m, HttpStatus.OK);
     }
 
