@@ -60,6 +60,7 @@ public class MoviesController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMovie(@RequestHeader HttpHeaders headers, @PathVariable String id) throws Exception {
         MovieData m = moviesService.getMovie(id);
+        LOG.debug("Got movie {} with {} and directed by {}", m.getMovie().getTitle(), m.getCast(), m.getDirectors());
         return new ResponseEntity<>(m, HttpStatus.OK);
     }
 

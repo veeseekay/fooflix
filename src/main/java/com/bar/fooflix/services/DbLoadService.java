@@ -131,7 +131,8 @@ public class DbLoadService {
             }
             switch (job) {
                 case DIRECTED:
-                    final Director director = template.projectTo(doImportPerson(id, new Director(id)), Director.class);
+                    Director director = template.projectTo(doImportPerson(id, new Director(id)), Director.class);
+                    directorRepository.save(director);
                     director.directed(movie);
                     LOG.info("{} {}", job, director);
                     directorRepository.save(director);

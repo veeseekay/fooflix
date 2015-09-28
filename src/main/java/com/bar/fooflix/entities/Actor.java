@@ -1,7 +1,7 @@
 package com.bar.fooflix.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedToVia;
@@ -22,7 +22,7 @@ public class Actor extends Person {
     public Actor() {
     }
 
-    @JsonManagedReference
+    @JsonBackReference
     @RelatedToVia
     Collection<Role> roles;
 

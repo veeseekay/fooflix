@@ -2,6 +2,7 @@ package com.bar.fooflix.services;
 
 
 import com.bar.fooflix.domain.MovieData;
+import com.bar.fooflix.entities.Movie;
 import com.bar.fooflix.repositories.ActorRepository;
 import com.bar.fooflix.repositories.DirectorRepository;
 import com.bar.fooflix.repositories.MovieRepository;
@@ -28,6 +29,10 @@ public class MoviesService {
     @Transactional
     public MovieData getMovie(String id) throws Exception {
         MovieData md = movieRepository.getAMovie(id);
+        LOG.debug("Movie data after getting a movie is {}", md);
+
+        Movie movie = movieRepository.findById(id);
+        LOG.debug("Movie by id {} is {} with cast {} and directors {}", id, movie, movie.getActors(), movie.getDirectors());
 
         return md;
     }

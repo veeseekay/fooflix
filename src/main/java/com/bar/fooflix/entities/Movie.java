@@ -1,16 +1,24 @@
 package com.bar.fooflix.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.neo4j.helpers.collection.IteratorUtil;
-import org.springframework.data.neo4j.annotation.*;
+import org.springframework.data.neo4j.annotation.Fetch;
+import org.springframework.data.neo4j.annotation.GraphId;
+import org.springframework.data.neo4j.annotation.Indexed;
+import org.springframework.data.neo4j.annotation.NodeEntity;
+import org.springframework.data.neo4j.annotation.RelatedTo;
+import org.springframework.data.neo4j.annotation.RelatedToVia;
 import org.springframework.data.neo4j.support.index.IndexType;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
 
 import static org.neo4j.graphdb.Direction.INCOMING;
 
@@ -34,23 +42,22 @@ public class Movie {
     @JsonProperty("description")
     String description;
 
-    @JsonBackReference
     @JsonIgnore
+    @JsonManagedReference
     @JsonProperty("directors")
     @RelatedTo(type="DIRECTED", direction = INCOMING)
+    @Fetch
     Set<Person> directors;
 
-    @JsonBackReference
     @JsonIgnore
+    @JsonManagedReference
     @JsonProperty("actors")
     @RelatedTo(type = "ACTS_IN", direction = INCOMING)
     Set<Person> actors;
 
-    @JsonIgnore
     @RelatedToVia(type = "ACTS_IN", direction = INCOMING)
     Collection<Role> roles;
 
-    @JsonIgnore
     @RelatedToVia(type = "RATED", direction = INCOMING)
     @Fetch
     Iterable<Rating> ratings;
@@ -76,12 +83,10 @@ public class Movie {
         this.title = title;
     }
 
-    @JsonIgnore
     public Collection<Person> getActors() {
         return actors;
     }
 
-    @JsonIgnore
     public Collection<Role> getRoles() {
         return roles;
     }
@@ -258,6 +263,6 @@ public class Movie {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return String.format("%s (%s) [%s]", title, releaseDate, id);
     }
 }
