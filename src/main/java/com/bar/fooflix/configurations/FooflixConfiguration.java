@@ -32,13 +32,12 @@ import java.io.File;
 public class FooflixConfiguration extends Neo4jConfiguration implements CommandLineRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(FooflixConfiguration.class);
-
-    public FooflixConfiguration() {
-            setBasePackage("com.bar.fooflix");
-    }
-
     @Autowired
     GraphDatabaseService db;
+
+    public FooflixConfiguration() {
+        setBasePackage("com.bar.fooflix");
+    }
 
     @Bean
     GraphDatabaseService graphDatabaseService() {
@@ -61,7 +60,7 @@ public class FooflixConfiguration extends Neo4jConfiguration implements CommandL
 
             neoServerBootstrapper = new WrappingNeoServerBootstrapper(api, config);
             neoServerBootstrapper.start();
-        } catch(Exception e) {
+        } catch (Exception e) {
             //handle appropriately
         }
         // end of Neo4j browser config

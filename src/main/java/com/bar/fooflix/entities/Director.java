@@ -17,6 +17,10 @@ import java.util.Set;
 })
 @NodeEntity
 public class Director extends Person {
+    @JsonBackReference
+    @RelatedTo(elementClass = Movie.class, type = "DIRECTED")
+    private Set<Movie> directedMovies = new HashSet<>();
+
     public Director(String id, String name) {
         super(id, name);
     }
@@ -24,12 +28,8 @@ public class Director extends Person {
     public Director() {
     }
 
-    @JsonBackReference
-    @RelatedTo(elementClass = Movie.class, type = "DIRECTED")
-    private Set<Movie> directedMovies=new HashSet<>();
-
     public Director(String id) {
-        super(id,null);
+        super(id, null);
     }
 
     public Set<Movie> getDirectedMovies() {

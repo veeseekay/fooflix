@@ -39,22 +39,16 @@ public class DbLoadService {
 
     @Value("${max.actors:5}")
     int maxActors;
-
-    @Autowired
-    private MovieRepository movieRepository;
-
-    @Autowired
-    private ActorRepository actorRepository;
-
-    @Autowired
-    private DirectorRepository directorRepository;
-
-    @Autowired
-    private GenreRepository genreRepository;
-
     @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    private MovieRepository movieRepository;
+    @Autowired
+    private ActorRepository actorRepository;
+    @Autowired
+    private DirectorRepository directorRepository;
+    @Autowired
+    private GenreRepository genreRepository;
     @Autowired
     private TmdbApiClient client;
 
@@ -65,8 +59,8 @@ public class DbLoadService {
     public Map<Integer, String> importMovies(List<Integer> ranges) {
         final Map<Integer, String> movies = new LinkedHashMap<Integer, String>();
 
-        for(Integer id : ranges) {
-        String result = importMovieFailsafe(id);
+        for (Integer id : ranges) {
+            String result = importMovieFailsafe(id);
             movies.put(id, result);
         }
 
@@ -155,12 +149,12 @@ public class DbLoadService {
                     directorRepository.save(director);
                     break;
                 case ACTS_IN:
-                    if(max < maxActors) {
+                    if (max < maxActors) {
                         final Actor actor = template.projectTo(doImportPerson(id, new Actor(id)), Actor.class);
                         actor.playedIn(movie, (String) entry.get("character"));
                         LOG.info("{} {}", job, actor);
                         actorRepository.save(actor);
-                        max ++;
+                        max++;
                     }
                     break;
             }

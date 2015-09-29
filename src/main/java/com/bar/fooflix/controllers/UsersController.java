@@ -29,10 +29,9 @@ import javax.validation.Valid;
 @ComponentScan
 public class UsersController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(UsersController.class);
     @Autowired
     UsersService usersService;
-
-    private static final Logger LOG = LoggerFactory.getLogger(UsersController.class);
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getUsers(@RequestHeader HttpHeaders headers,

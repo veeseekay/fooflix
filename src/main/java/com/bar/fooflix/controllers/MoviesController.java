@@ -34,10 +34,9 @@ import javax.validation.Valid;
 @ComponentScan
 public class MoviesController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MoviesController.class);
     @Autowired
     MoviesService moviesService;
-
-    private static final Logger LOG = LoggerFactory.getLogger(MoviesController.class);
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<PagedResources<Movie>> getMovies(@RequestHeader HttpHeaders headers,
@@ -84,7 +83,8 @@ public class MoviesController {
     }
 
     @RequestMapping(value = "/{id}/crew", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getMovieCrew(@RequestHeader HttpHeaders headers, @PathVariable String id) throws Exception {
+    public ResponseEntity<?> getMovieCrew(@RequestHeader HttpHeaders headers,
+            @PathVariable String id) throws Exception {
         Movie m = moviesService.getMovie(id);
         return new ResponseEntity<>(m, HttpStatus.OK);
     }
@@ -104,7 +104,8 @@ public class MoviesController {
     }
 
     @RequestMapping(value = "/{id}/cast", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getMovieCast(@RequestHeader HttpHeaders headers, @PathVariable String id) throws Exception {
+    public ResponseEntity<?> getMovieCast(@RequestHeader HttpHeaders headers,
+            @PathVariable String id) throws Exception {
         Movie m = moviesService.getMovie(id);
         return new ResponseEntity<>(m, HttpStatus.OK);
     }
@@ -124,7 +125,8 @@ public class MoviesController {
     }
 
     @RequestMapping(value = "/{id}/ratings", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getMovieRatings(@RequestHeader HttpHeaders headers, @PathVariable String id) throws Exception {
+    public ResponseEntity<?> getMovieRatings(@RequestHeader HttpHeaders headers,
+            @PathVariable String id) throws Exception {
         // Get paged ratings
         return new ResponseEntity<>("{well}", HttpStatus.OK);
     }
@@ -152,7 +154,8 @@ public class MoviesController {
     }
 
     @RequestMapping(value = "/{id}/reviews", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getMovieReviews(@RequestHeader HttpHeaders headers, @PathVariable String id) throws Exception {
+    public ResponseEntity<?> getMovieReviews(@RequestHeader HttpHeaders headers,
+            @PathVariable String id) throws Exception {
         // Get paged reviews
         return new ResponseEntity<>("{well}", HttpStatus.OK);
     }

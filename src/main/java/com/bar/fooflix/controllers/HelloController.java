@@ -13,7 +13,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @EnableWebMvc
@@ -23,13 +27,11 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @ComponentScan
 public class HelloController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(HelloController.class);
     @Autowired
     HumanRepository humanRepository;
-
     @Autowired
     GraphDatabase graphDatabase;
-
-    private static final Logger LOG = LoggerFactory.getLogger(HelloController.class);
 
     // Ensure neo4j is embedded and browser is started at localhost:7575
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -43,7 +45,7 @@ public class HelloController {
         Human ivan = new Human("Ivan");
 
         LOG.info("Before linking up with Neo4j...");
-        for (Human human : new Human[] { greg, roy, craig, ivan }) {
+        for (Human human : new Human[]{greg, roy, craig, ivan}) {
             LOG.info(human.toString());
         }
 
@@ -68,7 +70,7 @@ public class HelloController {
             // We already know craig works with roy and greg
 
             LOG.info("Lookup each human by name...");
-            for (String name : new String[] { greg.name, roy.name, craig.name }) {
+            for (String name : new String[]{greg.name, roy.name, craig.name}) {
                 LOG.info(humanRepository.findByName(name).toString());
             }
 

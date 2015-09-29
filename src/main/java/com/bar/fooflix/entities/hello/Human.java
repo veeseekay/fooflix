@@ -12,17 +12,24 @@ import java.util.Set;
 @NodeEntity
 public class Human {
 
-    @GraphId Long id;
     public String name;
+    @RelatedTo(type = "TEAMMATE", direction = Direction.BOTH)
+    public
+    @Fetch
+    Set<Human> teammates;
+    @RelatedTo(type = "FRIEND", direction = Direction.BOTH)
+    public
+    @Fetch
+    Set<Human> friends;
+    @GraphId
+    Long id;
 
-    public Human() {}
-    public Human(String name) { this.name = name; }
+    public Human() {
+    }
 
-    @RelatedTo(type="TEAMMATE", direction=Direction.BOTH)
-    public @Fetch Set<Human> teammates;
-
-    @RelatedTo(type="FRIEND", direction=Direction.BOTH)
-    public @Fetch Set<Human> friends;
+    public Human(String name) {
+        this.name = name;
+    }
 
     public void worksWith(Human human) {
         if (teammates == null) {

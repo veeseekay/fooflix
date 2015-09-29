@@ -29,15 +29,15 @@ public class TmdbApiClient {
             Object value = mapper.readValue(new URL(url), Object.class);
             Map map = null;
             if (value instanceof List) {
-                List list= (List) value;
+                List list = (List) value;
                 if (list.isEmpty() || list.get(0).equals("Nothing found."))
                     return notFound();
-                map = (Map)list.get(0);
+                map = (Map) list.get(0);
             }
             if (value instanceof Map) {
-                map = (Map)value;
+                map = (Map) value;
             }
-            if (map == null ) {
+            if (map == null) {
                 return notFound();
             }
             if (map.containsKey("status_code")) {
@@ -56,6 +56,7 @@ public class TmdbApiClient {
     private String buildMovieUrl(String movieId) {
         return String.format("%s/3/movie/%s?api_key=%s&append_to_response=credits,trailers", baseUrl, movieId, apiKey);
     }
+
     private String buildConfigUrl() {
         return String.format("%s/3/configuration?api_key=%s", baseUrl, apiKey);
     }
@@ -65,6 +66,6 @@ public class TmdbApiClient {
     }
 
     private String buildPersonUrl(String personId) {
-        return String.format("%s/3/person/%s?api_key=%s", baseUrl,  personId, apiKey);
+        return String.format("%s/3/person/%s?api_key=%s", baseUrl, personId, apiKey);
     }
 }

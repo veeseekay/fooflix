@@ -3,7 +3,11 @@ package com.bar.fooflix.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.springframework.data.neo4j.annotation.*;
+import org.springframework.data.neo4j.annotation.EndNode;
+import org.springframework.data.neo4j.annotation.Fetch;
+import org.springframework.data.neo4j.annotation.GraphId;
+import org.springframework.data.neo4j.annotation.RelationshipEntity;
+import org.springframework.data.neo4j.annotation.StartNode;
 
 import javax.annotation.Generated;
 
@@ -15,14 +19,17 @@ import javax.annotation.Generated;
 public class Rating {
     private static final int MAX_STARS = 5;
     private static final int MIN_STARS = 0;
-    @GraphId Long id;
+    @GraphId
+    Long id;
 
     @JsonBackReference
     @Fetch
-    @StartNode User user;
+    @StartNode
+    User user;
 
     @JsonBackReference
-    @EndNode Movie movie;
+    @EndNode
+    Movie movie;
 
     int stars;
     String comment;
@@ -52,8 +59,8 @@ public class Rating {
     }
 
     public Rating rate(int stars, String comment) {
-        if (stars>= MIN_STARS && stars <= MAX_STARS) this.stars=stars;
-        if (comment!=null && !comment.isEmpty()) this.comment = comment;
+        if (stars >= MIN_STARS && stars <= MAX_STARS) this.stars = stars;
+        if (comment != null && !comment.isEmpty()) this.comment = comment;
         return this;
     }
 

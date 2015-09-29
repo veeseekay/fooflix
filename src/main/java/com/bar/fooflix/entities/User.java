@@ -23,34 +23,30 @@ import java.util.Set;
 })
 @NodeEntity
 public class User {
-    @GraphId
-    Long nodeId;
-
     public static final String FRIEND = "FRIEND";
     public static final String RATED = "RATED";
+    @GraphId
+    Long nodeId;
     @Indexed
     String login;
     String name;
     String info;
+    @RelatedToVia(type = RATED)
+    Set<Rating> ratings;
+    @RelatedTo(type = RATED)
+    Set<Movie> favorites;
+    @RelatedTo(type = FRIEND, direction = Direction.BOTH)
+    @Fetch
+    Set<User> friends;
 
     public User() {
     }
+
 
     public User(String login, String name, String password) {
         this.login = login;
         this.name = name;
     }
-
-    @RelatedToVia(type = RATED)
-    Set<Rating> ratings;
-
-    @RelatedTo(type = RATED)
-    Set<Movie> favorites;
-
-
-    @RelatedTo(type = FRIEND, direction = Direction.BOTH)
-    @Fetch
-    Set<User> friends;
 
     public void addFriend(User friend) {
         this.friends.add(friend);
@@ -74,11 +70,13 @@ public class User {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Set<User> getFriends() {
         return friends;
     }
-
-
 
     public String getLogin() {
         return login;
@@ -87,16 +85,13 @@ public class User {
     public String getInfo() {
         return info;
     }
+
     public void setInfo(String info) {
         this.info = info;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public boolean isFriend(User other) {
-        return other!=null && getFriends().contains(other);
+        return other != null && getFriends().contains(other);
     }
 
     @Override

@@ -1,4 +1,3 @@
-
 package com.bar.fooflix;
 
 import org.springframework.boot.SpringApplication;

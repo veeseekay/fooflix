@@ -15,6 +15,10 @@ import java.util.Collection;
 })
 @NodeEntity
 public class Actor extends Person {
+    @JsonBackReference
+    @RelatedToVia
+    Collection<Role> roles;
+
     public Actor(String id, String name) {
         super(id, name);
     }
@@ -22,12 +26,8 @@ public class Actor extends Person {
     public Actor() {
     }
 
-    @JsonBackReference
-    @RelatedToVia
-    Collection<Role> roles;
-
     public Actor(String id) {
-        super(id,null);
+        super(id, null);
     }
 
     public Iterable<Role> getRoles() {
