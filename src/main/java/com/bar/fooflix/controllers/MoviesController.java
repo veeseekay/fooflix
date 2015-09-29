@@ -7,6 +7,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -36,11 +40,12 @@ public class MoviesController {
     private static final Logger LOG = LoggerFactory.getLogger(MoviesController.class);
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getMovies(@RequestHeader HttpHeaders headers,
-            @RequestParam(value = "row", required = false) Integer row,
-            @RequestParam(value = "size", required = false) Integer size) throws Exception {
+    public HttpEntity<PagedResources<Movie>> getMovies(@RequestHeader HttpHeaders headers,
+            Pageable pageable, PagedResourcesAssembler assembler) throws Exception {
 
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
+
+        Page<Movie> movies = moviesService.getMovies(pageable);
+        return new ResponseEntity<>(assembler.toResource(movies), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

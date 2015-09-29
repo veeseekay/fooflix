@@ -43,7 +43,7 @@ dependencies {
     compile("org.neo4j.app:neo4j-server:2.2.5")
     compile("org.neo4j.app:neo4j-server:2.2.5:static-web")
     compile("com.ryantenney.metrics:metrics-spring:3.0.3")
-
+    compile ("org.springframework.hateoas:spring-hateoas:0.19.0.RELEASE")
     testCompile("junit:junit")
 }
 

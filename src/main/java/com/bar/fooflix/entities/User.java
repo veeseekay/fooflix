@@ -42,7 +42,7 @@ public class User {
     }
 
     @RelatedToVia(type = RATED)
-    @Fetch Iterable<Rating> ratings;
+    Set<Rating> ratings;
 
     @RelatedTo(type = RATED)
     Set<Movie> favorites;

@@ -1,6 +1,7 @@
 package com.bar.fooflix.utils;
 
 
+import com.bar.fooflix.entities.Genre;
 import com.bar.fooflix.entities.Movie;
 import com.bar.fooflix.entities.Person;
 import com.bar.fooflix.entities.Roles;
@@ -12,13 +13,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 // Get some static stuff done here
 public class TmdbJsonMapper {
 
     private static final Logger LOG = LoggerFactory.getLogger(TmdbJsonMapper.class);
 
-    public static void mapToMovie(Map data, Movie movie) {
+    public static void mapToMovie(Map data, Set<Genre> genres, Movie movie) {
         try {
             movie.setTitle((String) data.get("title"));
             movie.setLanguage((String) data.get("original_language"));
@@ -31,6 +33,7 @@ public class TmdbJsonMapper {
             Map trailer = extractFirstMap(data, "trailers", "youtube");
             if (trailer != null) movie.setTrailer("http:/youtu.be/" + trailer.get("source"));
             movie.setGenre(extractFirst(data, "genres", "name"));
+            populateGenres(genres, data, "genres", "name");
             movie.setStudio(extractFirst(data, "production_companies", "name"));
             //movie.setImageUrl(String.format(posterFormat, data.get("poster_path")));
         } catch (Exception e) {
@@ -47,6 +50,16 @@ public class TmdbJsonMapper {
         return null;
     }
 
+    private static void populateGenres(Set<Genre> genres, Map data, String field, String property) {
+        List<Map> inner = (List<Map>) data.get(field);
+        if (inner != null || !(inner.isEmpty())) {
+
+            for (int i = 0; i < inner.size(); i++) {
+                LOG.debug("populating genres {}", inner.get(i).get("name"));
+                genres.add(new Genre(inner.get(i).get("name").toString()));
+            }
+        }
+    }
 
     private static String extractFirst(Map data, String field, String property) {
         List<Map> inner = (List<Map>) data.get(field);

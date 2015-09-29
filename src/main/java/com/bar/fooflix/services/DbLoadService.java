@@ -3,12 +3,14 @@ package com.bar.fooflix.services;
 
 import com.bar.fooflix.entities.Actor;
 import com.bar.fooflix.entities.Director;
+import com.bar.fooflix.entities.Genre;
 import com.bar.fooflix.entities.Movie;
 import com.bar.fooflix.entities.Person;
 import com.bar.fooflix.entities.Roles;
 import com.bar.fooflix.entities.User;
 import com.bar.fooflix.repositories.ActorRepository;
 import com.bar.fooflix.repositories.DirectorRepository;
+import com.bar.fooflix.repositories.GenreRepository;
 import com.bar.fooflix.repositories.MovieRepository;
 import com.bar.fooflix.repositories.UserRepository;
 import com.bar.fooflix.utils.TmdbJsonMapper;
@@ -22,9 +24,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.neo4j.helpers.collection.IteratorUtil.asIterable;
 
@@ -44,6 +48,9 @@ public class DbLoadService {
 
     @Autowired
     private DirectorRepository directorRepository;
+
+    @Autowired
+    private GenreRepository genreRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -77,6 +84,7 @@ public class DbLoadService {
 
         Movie movie = movieRepository.findById("603");
         micha.rate(template, movie, 5, "Best of the series");
+        ollie.rate(template, movie, 4, "nice");
 
         movie = movieRepository.findById("605");
         ollie.rate(template, movie, 2, "ok");
@@ -101,12 +109,21 @@ public class DbLoadService {
             movie = new Movie(movieId, null);
         }
 
+        Set<Genre> genres = new HashSet<>();
         Map data = loadMovieData(movieId);
         if (data.containsKey("not_found")) throw new RuntimeException("Data for Movie " + movieId + " not found.");
-        TmdbJsonMapper.mapToMovie(data, movie);
+        TmdbJsonMapper.mapToMovie(data, genres, movie);
         movieRepository.save(movie);
+        relateGenresToMovie(movie, genres);
         relatePersonsToMovie(movie, data);
         return movie;
+    }
+
+    private void relateGenresToMovie(Movie movie, Set<Genre> genres) {
+        for (Genre genre : genres) {
+            genre.hasMovie(movie);
+            genreRepository.save(genre);
+        }
     }
 
     private Map loadMovieData(String movieId) {

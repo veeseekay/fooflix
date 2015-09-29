@@ -10,12 +10,17 @@ import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.data.neo4j.repository.NamedIndexRepository;
 import org.springframework.data.neo4j.repository.RelationshipOperationsRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
 
 public interface MovieRepository extends GraphRepository<Movie>,
         NamedIndexRepository<Movie>,
-        RelationshipOperationsRepository<Movie> {
+        RelationshipOperationsRepository<Movie>,
+        PagingAndSortingRepository<Movie, Long> {
+
+    Page<Movie> findAll(Pageable pageable);
+
     Movie findById(String id);
 
     @Query("match (movie:Movie {id: {0}}) " +

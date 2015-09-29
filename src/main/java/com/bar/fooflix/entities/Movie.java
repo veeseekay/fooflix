@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.neo4j.graphdb.Direction;
 import org.neo4j.helpers.collection.IteratorUtil;
 import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.GraphId;
@@ -18,6 +19,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import static org.neo4j.graphdb.Direction.INCOMING;
@@ -43,10 +45,10 @@ public class Movie {
     String description;
 
     @JsonManagedReference
-    @JsonProperty("directors")
-    @RelatedTo(type="DIRECTED", direction = INCOMING)
+    @JsonProperty("genres")
+    @RelatedTo(type="HAS_MOVIE", direction = Direction.BOTH)
     @Fetch
-    Set<Person> directors;
+    Set<Genre> genres;
 
     @JsonManagedReference
     @JsonProperty("actors")
@@ -58,7 +60,13 @@ public class Movie {
 
     @RelatedToVia(type = "RATED", direction = INCOMING)
     @Fetch
-    Iterable<Rating> ratings;
+    List<Rating> ratings;
+
+    @JsonManagedReference
+    @JsonProperty("directors")
+    @RelatedTo(type="DIRECTED", direction = INCOMING)
+    @Fetch
+    Set<Person> directors;
 
     private String language;
     private String imdbId;
@@ -120,7 +128,6 @@ public class Movie {
         return count==0 ? 0 : stars / count;
     }
 
-    @JsonIgnore
     public Collection<Rating> getRatings() {
         Iterable<Rating> allRatings = ratings;
         return allRatings == null ? Collections.<Rating>emptyList() : IteratorUtil.asCollection(allRatings);
@@ -257,6 +264,11 @@ public class Movie {
     @JsonManagedReference
     public Set<Person> getDirectors() {
         return directors;
+    }
+
+    @JsonManagedReference
+    public Set<Genre> getGenres() {
+        return genres;
     }
 
     @Override

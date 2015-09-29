@@ -1,5 +1,6 @@
 package com.bar.fooflix.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.data.neo4j.annotation.*;
@@ -16,7 +17,11 @@ public class Rating {
     private static final int MIN_STARS = 0;
     @GraphId Long id;
 
+    @JsonBackReference
+    @Fetch
     @StartNode User user;
+
+    @JsonBackReference
     @EndNode Movie movie;
 
     int stars;

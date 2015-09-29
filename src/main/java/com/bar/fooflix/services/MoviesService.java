@@ -9,6 +9,8 @@ import com.bar.fooflix.repositories.MovieRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,11 @@ public class MoviesService {
 
     @Autowired
     private ActorRepository actorRepository;
+
+    @Transactional
+    public Page<Movie> getMovies(Pageable pageable) throws Exception {
+        return movieRepository.findAll(pageable);
+    }
 
     @Transactional
     public Movie getMovie(String id) throws Exception {

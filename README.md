@@ -22,4 +22,4 @@ Database: Embedded Neo4j-Server
 * Exception seen when accessing neo4j browser
 java.lang.IllegalStateException: The Neo Server running is of unknown type. Valid types are Community, Advanced, and Enterprise.
 This does not affect the code and can be ignored
-* neo4j browser does not show up when run as an uber jar
+* neo4j browser does not show up when run as an uber jar - fixed
