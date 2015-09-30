@@ -14,10 +14,10 @@ uri | GET | POST | PUT | DELETE
 
 # Build & Run
 
-$ git clone https://github.com/veeseekay/fooflix.git
-$ cd fooflix
-$ ./gradlew clean build
-$ ./gradlew bootRun
+* $ git clone https://github.com/veeseekay/fooflix.git
+* $ cd fooflix
+* $ ./gradlew clean build
+* $ ./gradlew bootRun
 
 # The Stack
 These are the components of our Restful Application:
@@ -28,6 +28,7 @@ These are the components of our Restful Application:
 * Uses movie data from www.themoviedb.org
 
 # Postman collection
+coming soon...
 
 # Known Issues
 * Exception seen when accessing neo4j browser
