@@ -6,6 +6,7 @@ import com.bar.fooflix.entities.Director;
 import com.bar.fooflix.entities.Genre;
 import com.bar.fooflix.entities.Movie;
 import com.bar.fooflix.entities.Person;
+import com.bar.fooflix.entities.Review;
 import com.bar.fooflix.entities.Roles;
 import com.bar.fooflix.entities.User;
 import com.bar.fooflix.repositories.ActorRepository;
@@ -65,12 +66,12 @@ public class DbLoadService {
         }
 
         // Now add some users
-        addUsers();
+        addUsersAndReviews();
         return movies;
     }
 
-    private void addUsers() {
-        // Now add some users
+    private void addUsersAndReviews() {
+        // Now add some users and reviews
         User micha = userRepository.save(new User("micha", "Micha", "password"));
         User ollie = new User("ollie", "Olliver", "password");
         micha.addFriend(ollie);
@@ -80,6 +81,15 @@ public class DbLoadService {
         micha.rate(template, movie, 5, "Best of the series");
         ollie.rate(template, movie, 4, "nice");
 
+        Review review = template.save(new Review("mustwatch", "Plot is very gripping, direction is slack in a few."));
+        micha.addReview(review);
+        review.reviewed(movie);
+        template.save(review);
+
+        ollie.downvote(template, review);
+        ollie.comment(template, review, "really ?");
+        template.save(ollie);
+        template.save(micha);
         movie = movieRepository.findById("605");
         ollie.rate(template, movie, 2, "ok");
     }

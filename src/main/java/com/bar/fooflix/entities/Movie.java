@@ -63,6 +63,10 @@ public class Movie {
     @Fetch
     List<Rating> ratings;
 
+    @RelatedTo(type = "HAS_REVIEW", direction = INCOMING)
+    @Fetch
+    List<Review> reviews;
+
     @JsonManagedReference
     @JsonProperty("directors")
     @RelatedTo(type = "DIRECTED", direction = INCOMING)
@@ -140,6 +144,11 @@ public class Movie {
     public Collection<Rating> getRatings() {
         Iterable<Rating> allRatings = ratings;
         return allRatings == null ? Collections.<Rating>emptyList() : IteratorUtil.asCollection(allRatings);
+    }
+
+    public Collection<Review> getReviews() {
+        Iterable<Review> allReviews = reviews;
+        return allReviews == null ? Collections.<Review>emptyList() : IteratorUtil.asCollection(allReviews);
     }
 
     public String getLanguage() {

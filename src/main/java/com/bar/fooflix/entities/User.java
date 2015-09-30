@@ -1,6 +1,7 @@
 package com.bar.fooflix.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.neo4j.graphdb.Direction;
@@ -25,6 +26,11 @@ import java.util.Set;
 public class User {
     public static final String FRIEND = "FRIEND";
     public static final String RATED = "RATED";
+    public static final String REVIEWED = "REVIEWED";
+    public static final String UPVOTED = "UPVOTED";
+    public static final String DOWNVOTED = "DOWNVOTED";
+    public static final String COMMENTS_ON = "COMMENTS_ON";
+
     @GraphId
     Long nodeId;
     @Indexed
@@ -35,9 +41,28 @@ public class User {
     Set<Rating> ratings;
     @RelatedTo(type = RATED)
     Set<Movie> favorites;
+
+    @RelatedToVia(type = DOWNVOTED)
+    Set<Downvote> downvotes;
+    @RelatedTo(type = DOWNVOTED)
+    Set<Review> downvotedMovies;
+
+
+    @RelatedToVia(type = UPVOTED)
+    Set<Upvote> upvotes;
+    @RelatedTo(type = UPVOTED)
+    Set<Review> upvotedMovies;
+
     @RelatedTo(type = FRIEND, direction = Direction.BOTH)
     @Fetch
     Set<User> friends;
+    @RelatedTo(type = REVIEWED, direction = Direction.OUTGOING)
+    @Fetch
+    Set<Review> reviews;
+
+    @JsonBackReference
+    @RelatedToVia
+    Collection<Comment> comments;
 
     public User() {
     }
@@ -52,9 +77,29 @@ public class User {
         this.friends.add(friend);
     }
 
+    public void addReview(Review review) {
+        this.reviews.add(review);
+    }
+
+
     public Rating rate(Neo4jOperations template, Movie movie, int stars, String comment) {
         final Rating rating = template.createRelationshipBetween(this, movie, Rating.class, RATED, false).rate(stars, comment);
         return template.save(rating);
+    }
+
+    public Upvote upvote(Neo4jOperations template, Review review) {
+        final Upvote upvote = template.createRelationshipBetween(this, review, Upvote.class, UPVOTED, false).upvote();
+        return template.save(upvote);
+    }
+
+    public Downvote downvote(Neo4jOperations template, Review review) {
+        final Downvote downvote = template.createRelationshipBetween(this, review, Downvote.class, DOWNVOTED, false).downvote();
+        return template.save(downvote);
+    }
+
+    public Comment comment(Neo4jOperations template, Review review, String userSays) {
+        final Comment comment = template.createRelationshipBetween(this, review, Comment.class, COMMENTS_ON, false).comment(userSays);
+        return template.save(comment);
     }
 
     public Collection<Rating> getRatings() {
