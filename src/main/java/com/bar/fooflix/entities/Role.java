@@ -20,11 +20,11 @@ public class Role {
     @GraphId
     Long id;
 
-    @JsonBackReference
+    @JsonBackReference(value = "has_role")
     @EndNode
     Movie movie;
 
-    //@JsonBackReference
+    @JsonBackReference(value = "acts_as")
     @Fetch
     @StartNode
     Actor actor;

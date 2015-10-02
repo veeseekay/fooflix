@@ -1,4 +1,4 @@
-package com.bar.fooflix.entities;
+package com.bar.fooflix.tests;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;

@@ -1,4 +1,4 @@
-package com.bar.fooflix.entities;
+package com.bar.fooflix.tests;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -15,53 +15,41 @@ import javax.annotation.Generated;
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
 })
-@RelationshipEntity
-public class Rating {
-    private static final int MAX_STARS = 5;
-    private static final int MIN_STARS = 0;
+@RelationshipEntity(type = "DOWNVOTES")
+public class Downvote {
+
     @GraphId
     Long id;
 
-    @JsonBackReference(value = "ratings")
+    @JsonBackReference
     @Fetch
     @StartNode
     User user;
 
-    @JsonBackReference(value = "rated")
+    @JsonBackReference
     @EndNode
-    Movie movie;
+    @Fetch
+    Review review;
 
-    int stars;
-    String comment;
+    int downvote = 0;
+
+    public Downvote() {}
+
+    public Downvote downvote() {
+        this.downvote = 1;
+        return this;
+    }
 
     public User getUser() {
         return user;
     }
 
-    public Movie getMovie() {
-        return movie;
+    public Review getReview() {
+        return review;
     }
 
-    public int getStars() {
-        return stars;
-    }
-
-    public void setStars(int stars) {
-        this.stars = stars;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public Rating rate(int stars, String comment) {
-        if (stars >= MIN_STARS && stars <= MAX_STARS) this.stars = stars;
-        if (comment != null && !comment.isEmpty()) this.comment = comment;
-        return this;
+    public int getDownvote() {
+        return downvote;
     }
 
     @Override
@@ -69,15 +57,13 @@ public class Rating {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Rating rating = (Rating) o;
+        Downvote rating = (Downvote) o;
         if (id == null) return super.equals(o);
         return id.equals(rating.id);
-
     }
 
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : super.hashCode();
     }
-
 }

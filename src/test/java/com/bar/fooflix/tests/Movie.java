@@ -1,9 +1,10 @@
-package com.bar.fooflix.entities;
+package com.bar.fooflix.tests;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -21,6 +22,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -57,17 +59,17 @@ public class Movie {
     @RelatedTo(type = "ACTS_IN", direction = Direction.INCOMING)
     Set<Person> actors;
 
-    //@JsonManagedReference(value = "has_role")
+    @JsonManagedReference(value = "has_role")
     @RelatedToVia(type = "ACTS_IN", direction = Direction.INCOMING)
-    Set<Role> roles;
+    Collection<Role> roles;
 
     @RelatedToVia(type = "RATED", direction = Direction.INCOMING)
     @Fetch
-    Set<Rating> ratings;
+    List<Rating> ratings;
 
     @RelatedTo(type = "HAS_REVIEW", direction = Direction.INCOMING)
     @Fetch
-    Set<Review> reviews;
+    List<Review> reviews;
 
     //@JsonManagedReference(value = "directed")
     @JsonProperty("directors")

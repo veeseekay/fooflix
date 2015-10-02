@@ -1,20 +1,15 @@
-package com.bar.fooflix.entities;
+package com.bar.fooflix.tests;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
-import org.springframework.data.neo4j.annotation.RelatedToVia;
 
 import javax.annotation.Generated;
-import java.util.Set;
-
-import static org.neo4j.graphdb.Direction.INCOMING;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property="@UUID")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -38,7 +33,7 @@ public class Review {
     @RelatedTo(elementClass = User.class, type = "REVIEWED")
     private User user;
 
-    @RelatedToVia(type = "UPVOTED", direction = INCOMING)
+    /*@RelatedToVia(type = "UPVOTED", direction = INCOMING)
     @Fetch
     Set<Upvote> upvotes;
 
@@ -48,7 +43,7 @@ public class Review {
 
     @RelatedToVia(type = "COMMENTS_ON", direction = INCOMING)
     @Fetch
-    Set<Comment> comments;
+    Set<Comment> comments;*/
 
     public Review() {
     }
@@ -58,7 +53,7 @@ public class Review {
         this.review = review;
     }
 
-    public int getDownvotes() {
+    /*public int getDownvotes() {
         if(downvotes == null) {
             return 0;
         }
@@ -75,7 +70,7 @@ public class Review {
 
     public Set<Comment> getComments() {
         return comments;
-    }
+    }*/
 
     public String getReview() {
         return review;

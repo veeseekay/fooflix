@@ -1,6 +1,5 @@
 package com.bar.fooflix.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.data.neo4j.annotation.EndNode;
@@ -21,12 +20,12 @@ public class Upvote {
     @GraphId
     Long id;
 
-    @JsonBackReference
+    //@JsonBackReference(value = "upvotes")
     @Fetch
     @StartNode
     User user;
 
-    @JsonBackReference
+    //@JsonBackReference
     @Fetch
     @EndNode
     Review review;

@@ -76,17 +76,19 @@ public class MoviesService {
 
     @Transactional
     public Iterable<Movie> updateMovies(List<Movie> movies) {
+        List<Movie> savedMovies = new ArrayList<>();
         for (Movie movie : movies) {
             Movie repoMovie = movieRepository.findById(movie.getId());
 
+            LOG.info("repoMovie by id {} = {}", repoMovie.getId(), repoMovie);
             if (repoMovie != null) {
                 mergeMovie(movie, repoMovie);
-                movieRepository.save(repoMovie);
+                savedMovies.add(movieRepository.save(repoMovie));
             } else {
                 LOG.error("Movie {} not found", movie.getId());
             }
         }
-        return movies;
+        return savedMovies;
     }
 
     @Transactional
@@ -162,7 +164,7 @@ public class MoviesService {
     }
 
     private void mergeMovie(Movie movie, Movie repoMovie) {
-        repoMovie.setDescription(movie.getDescription());
-        //repoMovie.setGenre(movie.getGenre());
+        repoMovie.setTitle(movie.getTitle());
+        repoMovie.setGenre(movie.getGenre());
     }
 }

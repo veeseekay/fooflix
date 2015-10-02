@@ -60,11 +60,11 @@ public class JsonTests {
     @Test
     public void moviesDeSerializationTrueTest() throws Exception {
 
-        /*InputStream in = this.getClass().getResourceAsStream("/jsons/movies_update.json");
+        InputStream in = this.getClass().getResourceAsStream("/jsons/movies_update.json");
         String request = IOUtils.toString(in, "UTF-8");
 
         ObjectMapper mapper = new ObjectMapper();
         List<Movie> movieData = mapper.readValue(request,  new TypeReference<List<Movie>>(){});
-        LOG.info("{} in json test", movieData.size());*/
+        LOG.info("{} in json test", movieData.size());
     }
 }
