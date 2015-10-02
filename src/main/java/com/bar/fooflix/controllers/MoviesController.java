@@ -24,7 +24,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 
 @EnableWebMvc
@@ -48,17 +49,18 @@ public class MoviesController {
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addMovies(@RequestHeader HttpHeaders headers, @RequestBody Object cmd) throws Exception {
+    public ResponseEntity<?> addMovies(@RequestHeader HttpHeaders headers, @RequestBody List<Map> moviesToAdd) throws Exception {
 
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
+        LOG.info("Adding movies {}", moviesToAdd);
+        return new ResponseEntity<>(moviesService.addMovies(moviesToAdd), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> bulkUpdateMovies(@RequestHeader HttpHeaders headers, @Valid @RequestBody Object cmd)
+    public ResponseEntity<?> bulkUpdateMovies(@RequestHeader HttpHeaders headers, @RequestBody List<Movie> moviesToUpdate)
             throws Exception {
 
-
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
+        LOG.info("Updating movies {}", moviesToUpdate);
+        return new ResponseEntity<>(moviesService.updateMovies(moviesToUpdate), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

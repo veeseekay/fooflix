@@ -28,11 +28,27 @@ public class FooflixExceptionHandler {
             HttpMessageNotReadableException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ResponseEntity<?> handleBindException(BindException e) {
+    public ResponseEntity<?> handleBindException(Exception e) {
         LOG.error(e.getMessage(), e);
         ErrorMessage message = new ErrorMessage();
         message.setMessage(e.getMessage());
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FooflixException.class)
+    public ResponseEntity<?> handleFooflixException(FooflixException exception) {
+        LOG.error(exception.getMessage(), exception);
+
+        // Case vs if
+        if (exception.getType() == ExceptionType.VALIDATION) {
+            return new ResponseEntity<>("{\"message\":\"Validation\"}", HttpStatus.BAD_REQUEST);
+        } else if (exception.getType() == ExceptionType.NOT_FOUND) {
+            return new ResponseEntity<>("{\"message\":\"Not found\"}", HttpStatus.NOT_FOUND);
+        } else if (exception.getType() == ExceptionType.FORBIDDEN) {
+            return new ResponseEntity<>("{\"message\":\"Forbidden\"}", HttpStatus.FORBIDDEN);
+        } else {
+            return new ResponseEntity<>("{\"message\":\"Internal Error\"}", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @ExceptionHandler({Throwable.class})

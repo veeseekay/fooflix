@@ -16,6 +16,7 @@ import org.springframework.data.neo4j.template.Neo4jOperations;
 
 import javax.annotation.Generated;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -37,30 +38,42 @@ public class User {
     String login;
     String name;
     String info;
+
+    @JsonBackReference(value = "ratings")
     @RelatedToVia(type = RATED)
     Set<Rating> ratings;
+
+    @JsonBackReference(value = "favorites")
     @RelatedTo(type = RATED)
     Set<Movie> favorites;
 
+    @JsonBackReference(value = "downvotes")
     @RelatedToVia(type = DOWNVOTED)
     Set<Downvote> downvotes;
+
+    @JsonBackReference(value = "downvoted-reviews")
     @RelatedTo(type = DOWNVOTED)
-    Set<Review> downvotedMovies;
+    Set<Review> downvotedReviews;
 
-
+    @JsonBackReference(value = "upvotes")
     @RelatedToVia(type = UPVOTED)
     Set<Upvote> upvotes;
-    @RelatedTo(type = UPVOTED)
-    Set<Review> upvotedMovies;
 
+    @JsonBackReference(value = "upvoted-reviews")
+    @RelatedTo(type = UPVOTED)
+    Set<Review> upvotedReviews;
+
+    @JsonBackReference(value = "friends")
     @RelatedTo(type = FRIEND, direction = Direction.BOTH)
     @Fetch
     Set<User> friends;
+
+    @JsonBackReference(value = "reviews")
     @RelatedTo(type = REVIEWED, direction = Direction.OUTGOING)
     @Fetch
     Set<Review> reviews;
 
-    @JsonBackReference
+    @JsonBackReference(value = "comments")
     @RelatedToVia
     Collection<Comment> comments;
 
@@ -103,12 +116,15 @@ public class User {
     }
 
     public Collection<Rating> getRatings() {
-        return IteratorUtil.asCollection(ratings);
+        if(ratings != null)
+            return IteratorUtil.asCollection(ratings);
+        else
+            return IteratorUtil.asCollection(new HashSet<Rating>());
     }
 
     @Override
     public String toString() {
-        return String.format("%s (%s)", name, login);
+        return String.format("%s (%s - %s)", name, login, nodeId);
     }
 
     public String getName() {

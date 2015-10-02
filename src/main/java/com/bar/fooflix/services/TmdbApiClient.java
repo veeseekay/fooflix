@@ -1,6 +1,8 @@
 package com.bar.fooflix.services;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,8 @@ import java.util.Map;
 
 @Service
 public class TmdbApiClient {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TmdbApiClient.class);
 
     @Value("${tmdb.url:http://api.themoviedb.org}")
     String baseUrl;
@@ -27,6 +31,7 @@ public class TmdbApiClient {
         ObjectMapper mapper = new ObjectMapper();
         try {
             Object value = mapper.readValue(new URL(url), Object.class);
+            LOG.info("Api returned {}", value);
             Map map = null;
             if (value instanceof List) {
                 List list = (List) value;

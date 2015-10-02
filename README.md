@@ -37,6 +37,7 @@ This does not affect the code and can be ignored
 * neo4j browser does not show up when run as an uber jar - fixed
 
 # TODO
+* Error scenarios
 * Unit tests for code coverage
 * Functional tests for stability
 * Consolidate string constants in code
