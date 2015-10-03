@@ -19,6 +19,8 @@ uri | GET | POST | PUT | DELETE
 * $ ./gradlew clean build
 * $ ./gradlew bootRun
 
+# Test Application
+
 * Import postman collections
 * Run Load Me request to load sample data set
 * View movies, user, ratings, reviews, up/down votes created in the neo4j browser
