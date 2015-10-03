@@ -18,6 +18,8 @@ uri | GET | POST | PUT | DELETE
 * $ cd fooflix
 * $ ./gradlew clean build
 * $ ./gradlew bootRun
+
+* Import postman collections
 * Run Load Me request to load sample data set
 * View movies, user, ratings, reviews, up/down votes created in the neo4j browser
 * Start running the postman requests in order
