@@ -57,12 +57,6 @@ public class DbLoadController {
         return new ResponseEntity<>(duration, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> clean(@RequestHeader HttpHeaders headers) throws Exception {
-        importService.cleanDb();
-        return new ResponseEntity<Object>("{nice}", HttpStatus.OK);
-    }
-
     private List<Integer> extractRanges(String ids) {
         List<Integer> ranges = new ArrayList<>();
         for (String token : ids.split(",")) {

@@ -1,19 +1,21 @@
 package com.bar.fooflix.services;
 
 
+import com.bar.fooflix.domain.CastData;
+import com.bar.fooflix.domain.CrewData;
 import com.bar.fooflix.domain.MovieData;
 import com.bar.fooflix.entities.Actor;
 import com.bar.fooflix.entities.Director;
 import com.bar.fooflix.entities.Genre;
 import com.bar.fooflix.entities.Movie;
-import com.bar.fooflix.entities.Person;
-import com.bar.fooflix.entities.Roles;
+import com.bar.fooflix.entities.Rating;
+import com.bar.fooflix.entities.Review;
+import com.bar.fooflix.entities.User;
 import com.bar.fooflix.repositories.ActorRepository;
 import com.bar.fooflix.repositories.DirectorRepository;
-import com.bar.fooflix.repositories.GenreRepository;
 import com.bar.fooflix.repositories.MovieRepository;
+import com.bar.fooflix.repositories.UserRepository;
 import com.bar.fooflix.utils.TmdbJsonMapper;
-import org.neo4j.helpers.collection.CombiningIterable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-
-import static org.neo4j.helpers.collection.IteratorUtil.asIterable;
 
 @Service
 public class MoviesService {
@@ -52,7 +52,7 @@ public class MoviesService {
     private ActorRepository actorRepository;
 
     @Autowired
-    private GenreRepository genreRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private Neo4jOperations template;
@@ -103,64 +103,88 @@ public class MoviesService {
         return movie;
     }
 
-    private void relateGenresToMovie(Movie movie, Set<Genre> genres) {
-        for (Genre genre : genres) {
-            genre.hasMovie(movie);
-            genreRepository.save(genre);
+
+    @Transactional
+    public CrewData getCrew(String id) throws Exception {
+        CrewData md = movieRepository.getCrew(id);
+        LOG.debug("Movie data after getting a movie is {}", md);
+
+        return md;
+    }
+
+    @Transactional
+    public CastData getCast(String id) throws Exception {
+        CastData md = movieRepository.getCast(id);
+        LOG.debug("Movie data after getting a movie is {}", md);
+
+        return md;
+    }
+
+
+    @Transactional
+    public List<Actor> addCast(String id, List<Actor> cast) throws Exception {
+        List<Actor> savedActors = new ArrayList<>();
+        for (Actor actor : cast) {
+            String role = cast.get(0).getRoles().iterator().next().getName();
+            actor.setId("" + new Random().nextInt(Integer.MAX_VALUE));
+            actor.setRoles(new HashSet<>());
+            template.save(actor);
+            Movie movie = movieRepository.findById(id);
+            LOG.info("Movie {} = {} ", id, movie);
+            actor.playedIn(movie, role);
+            savedActors.add(actorRepository.save(actor));
         }
+        return savedActors;
     }
 
-    private void relatePersonsToMovie(Movie movie, Map data) {
-
-        int max = 0;
-        @SuppressWarnings("unchecked") Iterable<Map> cast = (Collection<Map>) ((Map) data.get("credits")).get("cast");
-        @SuppressWarnings("unchecked") Iterable<Map> crew = (Collection<Map>) ((Map) data.get("credits")).get("crew");
-        for (Map entry : new CombiningIterable<>(asIterable(cast, crew))) {
-            String id = "" + entry.get("id");
-            String jobName = (String) entry.get("job");
-            Roles job = TmdbJsonMapper.mapToRole(jobName);
-            if (job == null) {
-                // Dont worry about other job names for now, we are good with director.
-                LOG.info("Could not add person with job " + jobName + " " + entry);
-                continue;
-            }
-            switch (job) {
-                case DIRECTED:
-                    Director director = template.projectTo(doImportPerson(id, new Director(id)), Director.class);
-                    directorRepository.save(director);
-                    director.directed(movie);
-                    LOG.info("{} {}", job, director);
-                    directorRepository.save(director);
-                    break;
-                case ACTS_IN:
-                    if (max < maxActors) {
-                        final Actor actor = template.projectTo(doImportPerson(id, new Actor(id)), Actor.class);
-                        actor.playedIn(movie, (String) entry.get("character"));
-                        LOG.info("{} {}", job, actor);
-                        actorRepository.save(actor);
-                        max++;
-                    }
-                    break;
-            }
+    @Transactional
+    public List<Director> addCrew(String id, List<Director> crew) throws Exception {
+        List<Director> savedDirectors = new ArrayList<>();
+        for (Director director : crew) {
+            director.setId("" + new Random().nextInt(Integer.MAX_VALUE));
+            template.save(director);
+            Movie movie = movieRepository.findById(id);
+            LOG.info("Movie {} = {} ", id, movie);
+            director.directed(movie);
+            savedDirectors.add(directorRepository.save(director));
         }
+        return savedDirectors;
     }
 
-    private <T extends Person> T doImportPerson(String personId, T newPerson) {
-
-        LOG.debug("Importing person " + personId);
-        Person person = template.findByIndexedValue(Person.class, "id", personId).to(Person.class).singleOrNull();
-        if (person != null) return (T) person;
-        Map data = loadPersonData(personId);
-        if (data.containsKey("not_found")) throw new RuntimeException("Data for Person " + personId + " not found.");
-        TmdbJsonMapper.mapToPerson(data, newPerson);
-        LOG.debug("new person {}", newPerson);
-        return template.save(newPerson);
+    @Transactional
+    public Page<Rating> getRatings(String movieId, Pageable pageable) throws Exception {
+        return movieRepository.findRatings(movieId, pageable);
     }
 
-    private Map loadPersonData(String personId) {
+    @Transactional
+    public Page<Review> getReviews(String movieId, Pageable pageable) throws Exception {
+        return movieRepository.findReviews(movieId, pageable);
+    }
 
-        //Map data = client.getPerson(personId);
-        return null;
+    @Transactional
+    public List<Review> saveReviews(String userLogin, String id, List<Review> reviews) {
+        Movie movie = movieRepository.findById(id);
+        User user = userRepository.findByLogin(userLogin);
+        Review review = template.save(reviews.get(0));
+        user.addReview(review);
+        review.reviewed(movie);
+        template.save(review);
+        template.save(user);
+;        return new ArrayList<Review>() {{
+            add(review);
+        }};
+    }
+
+    @Transactional
+    public Collection<Rating> saveRatings(String userLogin, String id, List<Rating> rating) {
+
+        LOG.info("user {} has rated movie {} as {} commented {}", userLogin, id, rating.get(0).getStars(), rating.get(0).getComment());
+
+        Movie movie = movieRepository.findById(id);
+        User u = userRepository.findByLogin(userLogin);
+        u.rate(template, movie, rating.get(0).getStars(), rating.get(0).getComment());
+
+        return rating;
     }
 
     private void mergeMovie(Movie movie, Movie repoMovie) {

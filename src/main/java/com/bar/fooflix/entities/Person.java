@@ -1,6 +1,7 @@
 package com.bar.fooflix.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -15,7 +16,6 @@ import org.springframework.data.neo4j.support.index.IndexType;
 import java.util.Date;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property="@UUID")
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NodeEntity
 @JsonPropertyOrder({
@@ -30,8 +30,11 @@ public class Person {
     @Indexed(indexType = IndexType.FULLTEXT, indexName = "people")
     String name;
 
+    @JsonProperty("birthday")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date birthday;
 
+    @JsonProperty("birthplace")
     private String birthplace;
 
     @JsonIgnore
@@ -55,26 +58,38 @@ public class Person {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
 
+    @JsonProperty("name")
     public void setName(String name) {
         this.name = name;
     }
 
+    @JsonProperty("birthday")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     public Date getBirthday() {
         return birthday;
     }
 
+    @JsonProperty("birthday")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 
+    @JsonProperty("birthplace")
     public String getBirthplace() {
         return birthplace;
     }
 
+    @JsonProperty("birthplace")
     public void setBirthplace(String birthplace) {
         this.birthplace = birthplace;
     }

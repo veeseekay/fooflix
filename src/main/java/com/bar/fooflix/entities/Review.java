@@ -85,6 +85,14 @@ public class Review {
         this.review = review;
     }
 
+    public String getOneWord() {
+        return oneWord;
+    }
+
+    public void setOneWord(String oneWord) {
+        this.oneWord = oneWord;
+    }
+
     public Movie getMovie() {
         return movie;
     }

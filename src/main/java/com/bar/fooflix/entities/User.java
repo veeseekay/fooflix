@@ -44,6 +44,7 @@ public class User {
 
     @JsonBackReference(value = "ratings")
     @RelatedToVia(type = RATED)
+    @Fetch
     Set<Rating> ratings;
 
     @JsonBackReference(value = "favorites")

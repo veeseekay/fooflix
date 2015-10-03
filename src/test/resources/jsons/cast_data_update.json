@@ -1,0 +1,12 @@
+[
+  {
+    "roles": [
+      {
+        "name": "Agent Brown"
+      }
+    ],
+    "name": "Paul Goddard",
+    "birthday": "1933-11-14",
+    "birthplace": "Bangalore"
+  }
+]

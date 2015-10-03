@@ -188,10 +188,4 @@ public class DbLoadService {
         Map data = client.getPerson(personId);
         return data;
     }
-
-    @Transactional
-    public void cleanDb() {
-        // TODO
-        //new Neo4jDatabaseCleaner(template).cleanDb();
-    }
 }

@@ -1,6 +1,7 @@
 package com.bar.fooflix.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -33,6 +34,7 @@ public class Director extends Person {
         super(id, null);
     }
 
+    @JsonIgnore
     public Set<Movie> getDirectedMovies() {
         return directedMovies;
     }

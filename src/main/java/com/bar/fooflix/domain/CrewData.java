@@ -1,8 +1,8 @@
 package com.bar.fooflix.domain;
 
-import com.bar.fooflix.entities.Actor;
 import com.bar.fooflix.entities.Director;
 import com.bar.fooflix.entities.Movie;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -15,21 +15,17 @@ import java.util.Collection;
 @JsonPropertyOrder({
 })
 @QueryResult
-public class MovieData {
+public class CrewData {
 
-    @JsonProperty("movie")
+    @JsonIgnore
     @ResultColumn("movie")
     Movie movie;
-
-    @JsonProperty("actors")
-    @ResultColumn("actors")
-    Collection<Actor> cast;
 
     @JsonProperty("directors")
     @ResultColumn("directors")
     Collection<Director> directors;
 
-    @JsonProperty("directors")
+    @JsonIgnore
     public Collection<Director> getDirectors() {
         return directors;
     }
@@ -38,6 +34,7 @@ public class MovieData {
         this.directors = directors;
     }
 
+    @JsonIgnore
     @JsonProperty("movie")
     public Movie getMovie() {
         return movie;
@@ -47,21 +44,11 @@ public class MovieData {
         this.movie = movie;
     }
 
-    @JsonProperty("actors")
-    public Collection<Actor> getCast() {
-        return cast;
-    }
-
-    public void setCast(Collection<Actor> cast) {
-        this.cast = cast;
-    }
-
     @Override
     public String toString() {
         return "MovieData{" +
                 "movie=" + movie.getTitle() +
                 ", directors=" + directors +
-                ", cast=" + cast +
                 '}';
     }
 }

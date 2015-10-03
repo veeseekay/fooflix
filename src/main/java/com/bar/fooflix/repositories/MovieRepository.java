@@ -1,8 +1,12 @@
 package com.bar.fooflix.repositories;
 
+import com.bar.fooflix.domain.CastData;
+import com.bar.fooflix.domain.CrewData;
 import com.bar.fooflix.domain.MovieData;
 import com.bar.fooflix.entities.Movie;
 import com.bar.fooflix.entities.MovieRecommendation;
+import com.bar.fooflix.entities.Rating;
+import com.bar.fooflix.entities.Review;
 import com.bar.fooflix.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +34,19 @@ public interface MovieRepository extends GraphRepository<Movie>,
             " RETURN movie, COLLECT(actor) AS actors, directors")
     MovieData getAMovie(String id);
 
+    @Query("match (movie:Movie {id: {0}}) " +
+            "optional match (director)-[:DIRECTED]->(movie) with movie, " +
+            "COLLECT(director) AS directors " +
+            "optional match (actor)-[:ACTS_IN]->(movie)" +
+            " RETURN movie, COLLECT(actor) AS actors")
+    CastData getCast(String id);
+
+    @Query("match (movie:Movie {id: {0}}) " +
+            "optional match (director)-[:DIRECTED]->(movie) with movie, " +
+            "COLLECT(director) AS directors " +
+            " RETURN movie, directors")
+    CrewData getCrew(String id);
+
     Page<Movie> findByTitleLike(String title, Pageable page);
 
     @Query("start user=node({0}) " +
@@ -39,5 +56,15 @@ public interface MovieRepository extends GraphRepository<Movie>,
             " order by rating desc, cnt desc" +
             " limit 10")
     List<MovieRecommendation> getRecommendations(User user);
+
+    /*@Query("match (movie:Movie {id: {0}}) " +
+            "optional match (review)-[:HAS_REVIEW]->(movie) " +
+            "RETURN movie.title, COLLECT(review) AS reviews")*/
+
+    @Query("match (review)-[:HAS_REVIEW]->(movie) where movie.id={0} RETURN review")
+    Page<Review> findReviews(String id, Pageable page);
+
+    @Query("MATCH (user)-[r:RATED]->(movie) where movie.id={0} RETURN r")
+    Page<Rating> findRatings(String id, Pageable page);
 
 }

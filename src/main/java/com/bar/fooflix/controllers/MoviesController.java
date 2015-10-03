@@ -1,6 +1,12 @@
 package com.bar.fooflix.controllers;
 
+import com.bar.fooflix.domain.CastData;
+import com.bar.fooflix.domain.CrewData;
+import com.bar.fooflix.entities.Actor;
+import com.bar.fooflix.entities.Director;
 import com.bar.fooflix.entities.Movie;
+import com.bar.fooflix.entities.Rating;
+import com.bar.fooflix.entities.Review;
 import com.bar.fooflix.services.MoviesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -87,100 +94,67 @@ public class MoviesController {
     @RequestMapping(value = "/{id}/crew", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMovieCrew(@RequestHeader HttpHeaders headers,
             @PathVariable String id) throws Exception {
-        Movie m = moviesService.getMovie(id);
-        return new ResponseEntity<>(m, HttpStatus.OK);
+        CrewData md = moviesService.getCrew(id);
+        return new ResponseEntity<>(md, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}/crew", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addMovieCrew(@RequestHeader HttpHeaders headers, @PathVariable String id,
-            @RequestBody Object cmd) throws Exception {
+            @RequestBody List<Director> crew) throws Exception {
 
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
-    }
+        LOG.info("{} directors for {}", crew, id);
+        return new ResponseEntity<>(moviesService.addCrew(id, crew), HttpStatus.OK);    }
 
-    @RequestMapping(value = "/{id}/crew", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateMovieCrew(@RequestHeader HttpHeaders headers, @PathVariable String id,
-            @RequestBody Object cmd) throws Exception {
-
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
-    }
 
     @RequestMapping(value = "/{id}/cast", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMovieCast(@RequestHeader HttpHeaders headers,
             @PathVariable String id) throws Exception {
-        Movie m = moviesService.getMovie(id);
-        return new ResponseEntity<>(m, HttpStatus.OK);
+        CastData md = moviesService.getCast(id);
+        LOG.info("Cast from service  {}", md);
+        return new ResponseEntity<>(md, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}/cast", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addMovieCast(@RequestHeader HttpHeaders headers, @PathVariable String id,
-            @RequestBody Object cmd) throws Exception {
+            @RequestBody List<Actor> cast) throws Exception {
 
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/{id}/cast", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateMovieCast(@RequestHeader HttpHeaders headers, @PathVariable String id,
-            @RequestBody Object cmd) throws Exception {
-
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
+        LOG.info("{} {} {} are casts for movie {}", cast.get(0).getBirthday(), cast.get(0).getBirthplace(), cast.get(0).getRoles(), id);
+        return new ResponseEntity<>(moviesService.addCast(id, cast), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}/ratings", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getMovieRatings(@RequestHeader HttpHeaders headers,
-            @PathVariable String id) throws Exception {
-        // Get paged ratings
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
+    public ResponseEntity<?> getMovieRatings(@RequestHeader HttpHeaders headers, @PathVariable String id,
+            Pageable pageable, PagedResourcesAssembler assembler) throws Exception {
+
+        Page<Rating> ratings = moviesService.getRatings(id, pageable);
+        LOG.info("Movie ratings {}", ratings);
+        return new ResponseEntity<>(assembler.toResource(ratings), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}/ratings", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addMovieRatingsForUser(@RequestHeader HttpHeaders headers, @PathVariable String id,
-            @RequestBody Object cmd) throws Exception {
+            @RequestParam("userLogin") String userLogin, @RequestBody List<Rating> ratings) throws Exception {
 
-        // Get user id from header and create user specific rating
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
+        // Get user id from session ideally
+        return new ResponseEntity<>(moviesService.saveRatings(userLogin, id, ratings), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}/ratings", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateMovieRatingsForUser(@RequestHeader HttpHeaders headers, @PathVariable String id,
-            @RequestBody Object cmd) throws Exception {
-
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/{id}/ratings", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteMovieRatingsForUser(@RequestHeader HttpHeaders headers, @PathVariable String id,
-            @RequestBody Object cmd) throws Exception {
-
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
-    }
 
     @RequestMapping(value = "/{id}/reviews", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getMovieReviews(@RequestHeader HttpHeaders headers,
-            @PathVariable String id) throws Exception {
-        // Get paged reviews
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
+    public ResponseEntity<?> getMovieReviews(@RequestHeader HttpHeaders headers, @PathVariable String id,
+            Pageable pageable, PagedResourcesAssembler assembler) throws Exception {
+
+        Page<Review> reviews = moviesService.getReviews(id, pageable);
+        return new ResponseEntity<>(assembler.toResource(reviews), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}/reviews", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addMovieReviewsForUser(@RequestHeader HttpHeaders headers, @PathVariable String id,
-            @RequestBody Object cmd) throws Exception {
+            @RequestParam("userLogin") String userLogin, @RequestBody List<Review> reviews) throws Exception {
 
-        // Get user id from header and create user specific rating
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
+        // Get user id from session ideally
+        return new ResponseEntity<>(moviesService.saveReviews(userLogin, id, reviews), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}/reviews", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateMovieReviewsForUser(@RequestHeader HttpHeaders headers, @PathVariable String id,
-            @RequestBody Object cmd) throws Exception {
 
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/{id}/reviews", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteMovieReviewsForUser(@RequestHeader HttpHeaders headers, @PathVariable String id,
-            @RequestBody Object cmd) throws Exception {
-
-        return new ResponseEntity<>("{well}", HttpStatus.OK);
-    }
 }

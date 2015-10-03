@@ -15,6 +15,7 @@ import java.util.Collection;
 })
 @NodeEntity
 public class Actor extends Person {
+
     @JsonManagedReference(value = "acts_as")
     @RelatedToVia
     Collection<Role> roles;
@@ -32,6 +33,10 @@ public class Actor extends Person {
 
     public Iterable<Role> getRoles() {
         return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 
     public Role playedIn(Movie movie, String roleName) {

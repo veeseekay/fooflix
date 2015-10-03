@@ -2,6 +2,7 @@ package com.bar.fooflix.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.data.neo4j.annotation.EndNode;
 import org.springframework.data.neo4j.annotation.Fetch;
@@ -31,6 +32,14 @@ public class Rating {
     @EndNode
     Movie movie;
 
+    public Rating() {
+    }
+
+    public Rating(int stars, String comment) {
+        this.stars = stars;
+        this.comment = comment;
+    }
+
     int stars;
     String comment;
 
@@ -42,10 +51,12 @@ public class Rating {
         return movie;
     }
 
+    @JsonProperty("stars")
     public int getStars() {
         return stars;
     }
 
+    @JsonProperty("stars")
     public void setStars(int stars) {
         this.stars = stars;
     }
