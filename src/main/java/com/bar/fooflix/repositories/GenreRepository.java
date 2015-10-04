@@ -5,4 +5,6 @@ import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.data.neo4j.repository.RelationshipOperationsRepository;
 
 public interface GenreRepository extends GraphRepository<Genre>, RelationshipOperationsRepository<Genre> {
+
+    Genre findByName(String name);
 }

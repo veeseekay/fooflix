@@ -57,9 +57,11 @@ public interface MovieRepository extends GraphRepository<Movie>,
             " limit 10")
     List<MovieRecommendation> getRecommendations(User user);
 
-    /*@Query("match (movie:Movie {id: {0}}) " +
-            "optional match (review)-[:HAS_REVIEW]->(movie) " +
-            "RETURN movie.title, COLLECT(review) AS reviews")*/
+    @Query("MATCH (genre)-[:HAS_MOVIE]-(m:Movie) where genre.name={0} return m order by m.stars")
+    Page<Movie> getRecommendationsByGenre(String genre, Pageable pageable);
+
+    @Query("MATCH (a)-[:ACTS_IN]-(m:Movie) where a.name={0} return m order by m.stars")
+    Page<Movie> getRecommendationsByActor(String actor, Pageable pageable);
 
     @Query("match (review)-[:HAS_REVIEW]->(movie) where movie.id={0} RETURN review")
     Page<Review> findReviews(String id, Pageable page);

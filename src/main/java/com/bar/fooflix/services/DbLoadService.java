@@ -66,20 +66,37 @@ public class DbLoadService {
         }
 
         // Now add some users
-        addUsersAndReviews();
+        addUsersAndReviewsAndRatings();
         return movies;
     }
 
-    private void addUsersAndReviews() {
+    private void addUsersAndReviewsAndRatings() {
         // Now add some users and reviews
+
+        User deb = new User("deb", "Deb", "password");
+        User vck = new User("vck", "V CK", "password");
+        User bud = new User("bud", "Buddie", "password");
+        User cheetah = new User("cheetah", "Cheetah", "password");
+        User rob = new User("rob", "Robin", "password");
+        User panther = new User("panth", "Panther", "password");
+        userRepository.save(deb);
+        userRepository.save(vck);
+        userRepository.save(bud);
+        userRepository.save(cheetah);
+        userRepository.save(rob);
+        userRepository.save(panther);
+
         User micha = userRepository.save(new User("micha", "Micha", "password"));
         User ollie = new User("ollie", "Olliver", "password");
         micha.addFriend(ollie);
         userRepository.save(micha);
 
+        // Rate and review 603
         Movie movie = movieRepository.findById("603");
         micha.rate(template, movie, 5, "Best of the series");
         ollie.rate(template, movie, 4, "nice");
+        panther.rate(template, movie, 3, "Alright");
+        rob.rate(template, movie, 5, "Excellent");
 
         Review review = template.save(new Review("mustwatch", "Plot is very gripping, direction is slack in a few."));
         micha.addReview(review);
@@ -88,10 +105,18 @@ public class DbLoadService {
 
         ollie.downvote(template, review);
         ollie.comment(template, review, "really ?");
+        cheetah.upvote(template, review);
         template.save(ollie);
         template.save(micha);
+        template.save(cheetah);
+
+        // Rate and review 605
         movie = movieRepository.findById("605");
         ollie.rate(template, movie, 2, "ok");
+        rob.rate(template, movie, 3, "+1");
+        bud.rate(template, movie, 3, "nice");
+        vck.rate(template, movie, 4, "wow");
+        deb.rate(template, movie, 1, "sucks");
     }
 
     private String importMovieFailsafe(Integer id) {
@@ -124,9 +149,16 @@ public class DbLoadService {
     }
 
     private void relateGenresToMovie(Movie movie, Set<Genre> genres) {
+
         for (Genre genre : genres) {
-            genre.hasMovie(movie);
-            genreRepository.save(genre);
+            Genre repoGenre = genreRepository.findByName(genre.getName());
+            if(repoGenre != null) {
+                LOG.info("Found genre {} = {}", repoGenre.getId(), repoGenre.getName());
+                repoGenre.hasMovie(movie);
+            } else {
+                genre.hasMovie(movie);
+                genreRepository.save(genre);
+            }
         }
     }
 

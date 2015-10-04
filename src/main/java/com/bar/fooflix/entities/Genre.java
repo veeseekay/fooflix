@@ -1,7 +1,9 @@
 package com.bar.fooflix.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.data.neo4j.annotation.GraphId;
@@ -23,9 +25,10 @@ public class Genre {
     @GraphId
     Long id;
 
+    @JsonProperty("name")
     String name;
 
-    //@JsonBackReference(value = "has_movie")
+    @JsonIgnore
     @RelatedTo(elementClass = Movie.class, type = "HAS_MOVIE")
     private Set<Movie> moviesOfGenre = new HashSet<>();
 
@@ -36,10 +39,12 @@ public class Genre {
         this.name = name;
     }
 
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
 
+    @JsonProperty("name")
     public void setName(String name) {
         this.name = name;
     }
@@ -52,6 +57,7 @@ public class Genre {
         this.id = id;
     }
 
+    @JsonIgnore
     public Set<Movie> getMoviesOfGenre() {
         return moviesOfGenre;
     }

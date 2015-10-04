@@ -46,9 +46,7 @@ public class DbLoadController {
         long start = System.currentTimeMillis();
 
         // lets ignore path variable ids for now
-        ids = "603,605";//"19995";//,194,600,601,602,603,604,605"; //,606,607,608,609,13,20526,11";
-        //"1893,1892,1894,168,193,200,157,152,201,154,12155,"+
-        //"58,285,118,22,392,5255,568,9800,497,101,120,121,122";
+        // ids = "603,605,604,87101,157336,534,62,218,78,644,2048,152,411,95";
 
         final Map<Integer, String> movies = importService.importMovies(extractRanges(ids));
 

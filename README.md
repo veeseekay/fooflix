@@ -11,6 +11,9 @@ uri | GET | POST | PUT | DELETE
 /users/{id} | show user | 400 bad request | update if exists, else 404 not found | 400 bad request
 /movies/{id}/ratings | paginated ratings | add new rating by a user | 404 not found | 404 not found
 /movies/{id}/reviews | paginated reviews | add new review by a user | 404 not found | 404 not found
+/recommendations/actor | paginated movie reco by actor | 400 bad request | 400 bad request | 400 bad request
+/recommendations/genre | paginated movie reco by genre | 400 bad request | 400 bad request | 400 bad request
+
 
 # Build & Run
 
