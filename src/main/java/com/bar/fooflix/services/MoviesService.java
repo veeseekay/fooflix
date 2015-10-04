@@ -124,15 +124,22 @@ public class MoviesService {
     @Transactional
     public List<Actor> addCast(String id, List<Actor> cast) throws Exception {
         List<Actor> savedActors = new ArrayList<>();
+        Movie movie = movieRepository.findById(id);
+        LOG.info("Movie {} = {} ", id, movie);
+
         for (Actor actor : cast) {
+            Actor repoActor = actorRepository.findByName(actor.getName());
             String role = cast.get(0).getRoles().iterator().next().getName();
-            actor.setId("" + new Random().nextInt(Integer.MAX_VALUE));
-            actor.setRoles(new HashSet<>());
-            template.save(actor);
-            Movie movie = movieRepository.findById(id);
-            LOG.info("Movie {} = {} ", id, movie);
-            actor.playedIn(movie, role);
-            savedActors.add(actorRepository.save(actor));
+            if(repoActor == null) {
+                actor.setId("" + new Random().nextInt(Integer.MAX_VALUE));
+                actor.setRoles(new HashSet<>());
+                template.save(actor);
+                actor.playedIn(movie, role);
+                savedActors.add(actorRepository.save(actor));
+            } else {
+                repoActor.playedIn(movie, role);
+                savedActors.add(actorRepository.save(repoActor));
+            }
         }
         return savedActors;
     }

@@ -6,4 +6,6 @@ import org.springframework.data.neo4j.repository.RelationshipOperationsRepositor
 
 public interface ActorRepository extends GraphRepository<Actor>, RelationshipOperationsRepository<Actor> {
     Actor findById(String id);
+
+    Actor findByName(String name);
 }
