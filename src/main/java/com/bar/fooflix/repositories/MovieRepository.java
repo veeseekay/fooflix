@@ -63,6 +63,10 @@ public interface MovieRepository extends GraphRepository<Movie>,
     @Query("MATCH (a)-[:ACTS_IN]-(m:Movie) where a.name={0} return m order by m.stars")
     Page<Movie> getRecommendationsByActor(String actor, Pageable pageable);
 
+    @Query("MATCH (u:User)-[r:RATED]-(m:Movie)-[:HAS_MOVIE]-(g:Genre)-[:HAS_MOVIE]-(reco:Movie) " +
+            "where u.login={0} and r.stars > 3 return reco order by reco.stars desc")
+    Page<Movie> getRecommendationsByUserRating(String user, Pageable pageable);
+
     @Query("match (review)-[:HAS_REVIEW]->(movie) where movie.id={0} RETURN review")
     Page<Review> findReviews(String id, Pageable page);
 

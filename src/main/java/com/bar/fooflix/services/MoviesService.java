@@ -138,7 +138,9 @@ public class MoviesService {
                 savedActors.add(actorRepository.save(actor));
             } else {
                 repoActor.playedIn(movie, role);
-                savedActors.add(actorRepository.save(repoActor));
+                Actor a = actorRepository.save(repoActor);
+                LOG.info("actor saved is {}", a, a.getRoles());
+                savedActors.add(a);
             }
         }
         return savedActors;

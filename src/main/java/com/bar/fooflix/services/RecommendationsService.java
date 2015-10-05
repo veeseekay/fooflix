@@ -28,4 +28,9 @@ public class RecommendationsService {
     public Page<Movie> getRecommendationsByActor(String actor, Pageable pageable) throws Exception {
         return movieRepository.getRecommendationsByActor(actor, pageable);
     }
+
+    @Transactional
+    public Page<Movie> getRecommendationsByUserRating(String user, Pageable pageable) throws Exception {
+        return movieRepository.getRecommendationsByUserRating(user, pageable);
+    }
 }

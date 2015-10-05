@@ -51,4 +51,12 @@ public class RecommendationsController {
         Page<Movie> movies = recommendationsService.getRecommendationsByActor(name, pageable);
         return new ResponseEntity<>(assembler.toResource(movies), HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/rating", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpEntity<PagedResources<Movie>> getRecommendationsByUserRating(@RequestHeader HttpHeaders headers,
+            @RequestParam String name, Pageable pageable, PagedResourcesAssembler assembler) throws Exception {
+
+        Page<Movie> movies = recommendationsService.getRecommendationsByUserRating(name, pageable);
+        return new ResponseEntity<>(assembler.toResource(movies), HttpStatus.OK);
+    }
 }
